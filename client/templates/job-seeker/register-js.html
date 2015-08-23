@@ -1,0 +1,83 @@
+
+<!--    <title>Register - Toad.IT</title> -->
+<template name="Register_JS">
+	<div class="registration-wrapper-2">
+		<div class="close-overlay-wrapper js-close-overlay"><i class="glyphicon glyphicon-remove-circle"></i></div>
+		<!-- Entire width -->
+		<div class="head">
+			<h1>Registration for <strong>Job Seeker</strong></h1>
+			<div><img class="image" src="/style/images/art/froggy-lying.png"/></div>
+		</div>
+		<!-- 88% width-->
+		<div class="body">
+			<form>
+				<div class="section">
+					<h3>Account Details</h3>
+					<div class="content">
+						{{> input seed='xfx' label='Email Address' placeholder='Valid Email Address' type='email' session='reg-email' required=true}}
+						{{> input seed='xfx' label='Password' placeholder='Password' type='password' session='reg-password-1' required=true gtlimit=8}}
+						{{> input seed='xfx' label='Re-enter Password' placeholder='Re-enter Password' type='password' session='reg-password-2' required=true gtlimit=8}}
+						{{#if passwordError}}<span style="color:red;">{{{passwordError}}}</span>{{/if}}
+						{{> passwordRequirements}}
+					</div>
+				</div>
+				<div class="section">
+					<h3>Personal Details</h3>
+					<div class="content">
+						{{> input seed='xfx' label='First Name' placeholder='First Name' session='reg-name' type='text' required=true}}
+						{{> input seed='xfx' label='Surname' placeholder='Surname' session='reg-surname' type='text' required=true}}
+						{{> input seed='xfx' label='Telephone Number' placeholder='e.g. 21 531 6952' session='reg-tel' type='contactNumber' required=true limit=15}}
+						{{> input seed='xfx' label='Cellphone Number' placeholder='e.g. 72 590 6542' session='reg-cell' type='contactNumber' required=true limit=15}}
+						{{> input seed='xfx' label='Province' placeholder='Type to Search' session='reg-province' type='combobox' required=true data=provinces}}
+						{{> input seed='xfx' label='Suburb' placeholder='Suburb' session='reg-suburb' type='text' required=true}}
+					</div>
+				</div>
+				<div class="section">
+					<h3>Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h3>
+					<div class="content">
+						{{> input seed='xfx' session='reg-current-salary' label='Current Salary' type='rand' required=true}}
+						{{> input seed='xfx' session='reg-move-for-salary' label='Willing To Move For' type='rand' required=true}}
+						{{> input seed='xfx' session='reg-ideal-salary' label='Ideal Salary' type='rand' required=true}}
+					</div>
+				</div>
+				<div class="section">
+					<h3>Role requirements</h3>
+					<div class="content">
+						{{> input seed='xfx' session='reg-current-job' label='Current Job' type='combobox-other' required=true data=positions}}
+						{{> input seed='xfx' session='reg-desired-job' label='Desired Job' type='combobox-other' required=true data=positions}}
+					</div>
+				</div>
+				<div class="section">
+					<h3>Curriculum Vitae</h3>
+					<div class="content">
+						<div>
+							<input type="file" accept="application/pdf" class="js-cv-input" />
+							<br />
+							{{> cvRequirements}}
+						</div>
+						{{#if cvError}}
+							<span style="color:red;">
+								{{{cvError}}}
+							</span>
+						{{/if}}
+					</div>
+				</div>
+				<div class="controls">
+					{{#if equalsor2 true errors processing}}
+						{{#if errors}}
+							<button class="special" action="submit" disabled type="submit">Register</button>
+						{{else}}
+							<button class="special" action="submit" disabled type="submit">{{> ajax_spinner_inline}} Registering</button>
+						{{/if}}
+					{{else}}
+						<button class="special" action="submit" type="submit">Register</button>
+					{{/if}}
+					<button class="js-cancel">Cancel</button>
+					{{#if errors}}<div style="color:red;">There are errors on the page, unable to register. <i>See above</i>.</div>{{/if}}
+				</div>
+			</form>
+			<!-- spacer -->
+			<div style="position:absolute;top:100%;width:100%;height:200px"></div>
+		</div>
+	</div>
+</template>

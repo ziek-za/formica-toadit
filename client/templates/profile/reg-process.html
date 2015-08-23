@@ -1,0 +1,48 @@
+<template name="Registration_Conf">
+	<div class="registration-wrapper">
+		<div class="regconf-wrapper">
+			<div class="head">
+				<div class="confirmation-tick"><i class="glyphicon glyphicon-ok"></i></div>
+				<h2>Registration <strong>Part 1</strong> is complete!</h2>
+			</div>
+			<div class="body">
+				<div class="descrp">
+					<h3>
+						A verification email has been sent to your email. In order to complete the registration process you are required to follow the <i>Verification Link</i> inside of it.
+					</h3>
+				</div>
+				<div class="links">
+					<a href="{{pathFor route='Home'}}">Home</a> &bull; <a href="{{pathFor route='Login' _portal='job-seeker'}}">Job Seeker Login</a> &bull; <a href="{{pathFor route='Login' _portal='employer'}}">Employer Login</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="Registration_Verification">
+	<div class="reg-verify-wrapper">
+		<div class="head">
+			{{#if complete}}
+				<div class="confirmation-tick"><i class="glyphicon glyphicon-ok"></i></div>
+				<h2>Registration is complete!</h2>
+			{{else}}
+				<div class="confirmation-tick bad"><i class="glyphicon glyphicon-remove"></i></div>
+				<h2>Registration <span style="text-decoration:underline;">is not</span> complete!</h2>
+			{{/if}}
+		</div>
+		<div class="body">
+			<div class="descrp">
+				<h3>
+					{{#if complete}}
+						Your acccount has been <span style="text-decoration:underline;">successfully verified</span>. <br /><br />You can now login!
+					{{else}}
+						There was an error in verifying your account. <br />Please contact <strong>ToadIT</strong> support staff.
+					{{/if}}
+				</h3>
+			</div>
+			<div class="links">
+				<a href="{{pathFor route='Home'}}">Home</a> &bull; <a href="{{pathFor route='Login' _portal='job-seeker'}}">Job Seeker Login</a> &bull; <a href="{{pathFor route='Login' _portal='employer'}}">Employer Login</a>
+			</div>
+		</div>
+	</div>
+</template>

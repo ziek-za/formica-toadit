@@ -1,0 +1,180 @@
+<template name="Search">
+	<div class="search-wrapper">
+		<h1 class="header-1"><i class="glyphicon glyphicon-search"></i> Search for <strong>{{searchType}}'s</strong></h1>
+		<!-- SEARCH FIELDS-->
+		<div class="searchfields-wrapper">
+			{{#if searchingForJobSeeker}}
+				{{> SearchFields_JS}}
+			{{else}}
+				{{> SearchFields_Emp}}
+			{{/if}}
+		</div>
+	<!-- DISPLAY TABLE -->
+		<div class="search-results-wrapper">
+			<div class="results">
+				
+					<table>
+						<thead>
+							{{#if searchingForJobSeeker}}
+								<tr class="job-seeker">
+									<th>Name</th>
+									<th>Current</th>
+									<th>Ideal</th>
+									<th>Move-for</th>
+									<th>Province</th>
+									<th>Ideal Position</th>
+								</tr>	
+							{{else}}
+								<tr class="employer">
+									<th>Company Name</th>
+									<th>Province</th>
+									<th>Telephone Number</th>
+								</tr>
+							{{/if}}
+						</thead>
+						{{#if results}}
+							<tbody>
+								{{#if ready}}{{else}}
+									<div class="table-results-loading">
+										<div class="loading-template">{{> loading}}</div>
+									</div>
+								{{/if}}
+								{{#each results}}
+									{{#if searchingForJobSeeker}}
+										{{> SearchDisplay_JS}}
+									{{else}}
+										{{> SearchDisplay_Emp}}
+									{{/if}}
+								{{/each}}
+							</tbody>
+						{{/if}}
+					</table>
+					{{#if results}}{{else}}
+						{{#if ready}}
+							<div style="padding-top:25px;width:100%;text-align:center;color:gray;">No results to show for your search query.</div>
+						{{/if}}
+					{{/if}}
+				
+				<!-- Pagination -->
+				<div class="pagination-wrapper" align="center">
+					<span class="results-count">Total Results: {{#if total}}{{total}}{{else}}0{{/if}}</span>
+					<span class="center-align"><!--
+					-->{{#if equals page 1}}{{else}}<div class="js-page-left left">&lt;</div>{{/if}}<!--
+					--><div class="page">Page {{page}}</div><!--
+					--><div class="js-page-right right">&gt;</div><!--
+				--></span><!--
+			--></div>
+			</div>
+		</div>
+	</div>
+</template>
+
+	<template name="SearchDisplay_JS">
+		<tr class="js-view-profile search-result-row job-seeker">
+			<!-- First name -->
+			<td>
+				{{#if equals profile.status 'active'}}
+					<i class="glyphicon glyphicon-user listing-symbol" style="color:green;"></i>
+				{{/if}}
+				{{#if equals profile.status 'pending'}}
+					<i class="glyphicon glyphicon-user listing-symbol" style="color:orange;"></i>
+				{{/if}}
+				{{#if equals profile.status 'placed'}}
+					<i class="glyphicon glyphicon-user listing-symbol" style="color:gray;"></i>
+				{{/if}}
+				{{profile.personal_details.name}} {{profile.personal_details.surname}}
+			</td>
+			<!-- Current Salary -->
+			<td>R {{profile.salary_details.current}}</td>
+			<!-- MoveFore Salary -->
+			<td>R {{profile.salary_details.moveFor}}</td>
+			<!-- Ideal Salary -->
+			<td>R {{profile.salary_details.ideal}}</td>
+			<!-- Province -->
+			<td>{{profile.personal_details.province}}</td>
+			<!-- Ideal position -->
+			<td>{{profile.role_requirements.desired_job}}</td>
+			<!--{{#if isInRole 'admin'}}
+				<td>
+					{{profile.status}}
+				</td>
+			{{/if}}-->
+		</tr>
+	</template>
+
+	<template name="SearchDisplay_Emp">
+		<tr class="js-view-profile search-result-row employer">
+			<td>{{profile.company_details.name}}</td>
+			<td>{{profile.company_details.province}}</td>
+			<td>+27 {{profile.company_details.tel_number}}</td>
+		</tr>
+	</template>
+
+	<template name="SearchFields_JS">
+		<form>
+			<div>
+				{{#if isInRole 'admin'}}{{> input seed='gbg' type='text' placeholder='Job Seeker Name Query' value='' session='search-query'}}{{/if}}
+				<div class="search-types">
+					<div>
+						<i class="glyphicon glyphicon-user" style="color:green;"></i>
+						Active
+						{{#if isInRole 'admin'}}{{> input seed='gbg' type='checkbox' value=true session='set-active'}}{{/if}}
+					</div>
+					{{#if isInRole 'admin'}}
+						<div>
+							<i class="glyphicon glyphicon-user" style="color:orange;"></i>
+							Pending
+							{{> input seed='gbg' type='checkbox' value=false session='set-pending'}}
+						</div>
+						<div>
+							<i class="glyphicon glyphicon-user" style="color:gray;"></i>
+							Placed
+							{{> input seed='gbg' type='checkbox' value=false session='set-placed'}}
+						</div>
+					{{/if}}
+				</div>
+				<!-- Province -->
+				<div class="combobox-search">
+					<div><strong>Province</strong></div>
+					{{> input seed='gbg' placeholder='Enter a Province' value='' type='combobox' session='search-province' data=provinces}}
+				</div>
+				<div class="combobox-search">
+					<div><strong>Desired Position</strong></div>
+					{{> input seed='gbg' placeholder='Enter a Position' value='' type='combobox-other' session='search-desired-position' data=positions}}
+				</div>
+				<!-- Current Salary -->
+				<div class="to-from"><!--
+					--><div><strong>Current Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					-->{{> input seed='gbg' placeholder='From' type='rand' session='current-high' limit=12}}<!--
+					-->{{> input seed='gbg' placeholder='To' type='rand' session='current-low' limit=12}}<!--
+				--></div>
+				<!-- MoveFor Salary -->
+				<div class="to-from"><!--
+					--><div><strong>Move-for Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					-->{{> input seed='gbg' placeholder='From' type='rand' session='movefor-high' limit=12}}<!--
+					-->{{> input seed='gbg' placeholder='To' type='rand' session='movefor-low' limit=12}}<!--
+				--></div>
+				<!-- Ideal Salary -->
+				<div class="to-from"><!--
+					--><div><strong>Desired Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					-->{{> input seed='gbg' placeholder='From' type='rand' session='desired-high' limit=12}}<!--
+					-->{{> input seed='gbg' placeholder='To' type='rand' session='desired-low' limit=12}}<!--
+				--></div>
+				<button style="margin-top:8px;" type="submit" action="submit" class="js-search">Search for Job Seeker's</button>
+			</div>
+		</form>
+	</template>
+
+	<template name="SearchFields_Emp">
+		<form>
+			<div>
+				{{> input seed='bob' type='text' placeholder='Employer Name Query' value='' session='search-query'}}
+				<!-- Province -->
+				<div class="combobox-search">
+					<div><strong>Province</strong></div>
+					{{> input seed='bob' placeholder='Enter a Province' value='' type='combobox' session='search-province' data=provinces}}
+				</div>
+				<button style="margin-top:8px;" type="submit" action="submit" class="js-search">Search for Employer's</button>
+			</div>
+		</form>
+	</template>

@@ -1,0 +1,24 @@
+<template name="combobox">
+	<div class="combobox-wrapper">
+		<div>
+			<input value="{{selectedItem}}" placeholder="{{placeholder}}" class="js-search" />
+			<span class="js-dropdown">V</span>
+		</div>
+		{{#if visible}}
+			<ul>
+				{{#if noResults}}
+					<i>No Results.</i>
+				{{else}}
+					<a href=""><li class="js-clear-combobox">-- none --</li></a>
+				{{/if}}
+				{{#each data}}
+					{{> comboboxItem}}
+				{{/each}}
+			</ul>
+		{{/if}}
+	</div>
+</template>
+
+	<template name="comboboxItem">
+		<a href=""><li class="js-combobox-session">{{{display}}}</li></a>
+	</template>

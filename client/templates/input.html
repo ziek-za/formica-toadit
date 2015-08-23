@@ -1,0 +1,93 @@
+<template name="input">
+	<div class="input-template-wrapper" style="{{#if equals type 'checkbox'}}display: inline;vertical-align: sub;{{/if}}">
+		{{#if label}}<span class="input-template-label">{{label}}{{#if required}} <span class="main-colour-1">*</span>{{/if}}</span>{{/if}}
+		{{#if equals type 'checkbox'}}
+			<input type="{{type}}" checked="{{value}}" class="js-checkbox">
+		{{/if}}
+		{{#if equals type 'textarea'}}
+			<textarea class="js-input-template" style="max-width:100%;max-height:250px;" placeholder="{{placeholder}}">{{value}}</textarea>
+		{{/if}}
+		{{#if equalsor2 type 'password' 'passwordPlaintext'}}
+			<input class="{{#if display_error}}error {{/if}}input-template-field js-input-template" placeholder="{{placeholder}}" type="{{#if equals type 'password'}}password{{else}}text{{/if}}" />
+		{{/if}}
+		{{#if equals type 'dropdown'}}
+			<select>
+				{{#each data}}
+					{{> inputDropdownOption}}
+				{{/each}}
+			</select>
+		{{/if}}
+		{{#if equalsor2 type 'rand' 'contactNumber'}}
+			<span class="input-number-prefix">
+				{{#if equals type 'contactNumber'}}+27{{/if}}
+				{{#if equals type 'rand'}}R{{/if}}
+			</span>
+			<input class="{{#if display_error}}error {{/if}}input-template-field js-input-template" placeholder="{{placeholder}}" value="{{value}}" type="text" />
+		{{/if}}		
+		{{#if equalsor2 type 'text' 'email'}}
+			<input placeholder="{{placeholder}}" class="{{#if display_error}}error {{/if}}input-template-field js-input-template" value="{{value}}" type="text" />
+		{{/if}}
+		{{#if equalsor2 type 'combobox' 'combobox-other'}}
+			<div class="input-combobox-wrapper">
+				<input value="{{selectedOption}}" type="text" placeholder="Type to search" class="{{#if display_error}}error {{/if}}js-search-combobox input-combobox" />
+				{{#if equals type 'combobox'}}
+					{{#if display_error}}{{else}}{{#if showClear}}<div class="js-clear-combobox clear-combobox">&times;</div>{{/if}}{{/if}}
+				{{/if}}
+				{{#if resultsVisible}}
+					<ul>
+						{{#if equals type 'combobox'}}
+							{{#if results}}{{else}}
+								<li><i>No Results</i></li>
+							{{/if}}
+						{{/if}}
+						{{#each results}}
+							{{> inputComboboxOption}}
+						{{/each}}
+					</ul>
+				{{/if}}
+			</div>
+		{{/if}}
+		{{#if equals type 'cv'}}
+			{{#if value}}
+				{{#each value}}
+					<div>
+						<span style="cursor:pointer;padding-right:8px;" class="js-remove-cv">&times;</span>
+						<a href="{{path}}" target="_blank" class="{{#if toBeRemoved}}to-be-removed{{/if}}">{{name}}</a>
+						<small style="color:gray"> - <strong>Uploaded:</strong> {{uploaded}}</small> 
+					</div>
+				{{/each}}
+			{{else}}
+				<i>You currently don't have a CV uploaded. In order to be listed, you will be required to have a CV.</i>
+				<div>
+					<input type="file" accept="application/pdf" class="js-cv-input" />
+					<br />
+					<i style="color:gray;"><strong>16Mb</strong> file size limit; <strong>.PDF</strong> file type</i>
+				</div>
+			{{/if}}
+		{{/if}}
+		{{#if display_error}}<span style="color:red;" class="error">{{{error}}}</span>{{/if}}
+	</div>
+</template>
+
+	<template name="inputComboboxOption">
+		<a href="" class="js-input-option"><li>{{this}}</li></a>
+	</template>
+
+	<template name="inputDropdownOption">
+		{{#if selected}}
+			<option class="js-input-option" selected value="{{this}}">{{this}}</option>
+		{{else}}
+			<option class="js-input-option" value="{{this}}">{{this}}</option>
+		{{/if}}
+	</template>
+
+	<!-- Used for describing the allowed uploads -->
+
+	<template name="passwordRequirements">
+		<div><small style="color:gray;"><i>Password is required to be greater than or equal to <strong>8</strong> characters.</i></small></div>
+	</template>
+
+	<template name="cvRequirements">
+		<i style="color:gray;"><strong>16Mb</strong> file size limit; <strong>.PDF</strong> file type</i>
+	</template>
+

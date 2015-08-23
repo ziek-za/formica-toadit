@@ -1,0 +1,67 @@
+<!-- <title>Contact Us - Toad.iT</title> -->
+<template name="ContactUs">
+  <div id="page2" class="hfeed">
+    <div id="wrapper2">
+      <div id="main">
+        <div id="primary">
+          <div id="content" role="main">
+            <article class="post hentry format-image">
+              <div class="entry-content">
+                <ul class="gallery-items">
+                  <li class="item1" style = "margin-left: -90px; margin-top: 20px;">
+                  <p><strong>We would like to hear from you</strong></p>
+                    {{#if submitted}}
+                      {{#if submitErr}}<div class="error-msg">{{submitErr}}</div>{{/if}}
+                      {{#if submitSuccess}}<div class="success-msg">{{submitSuccess}}</div>{{/if}}
+                      <br />
+                      <a href="" class="js-send-another">Would you like to send another?</a>
+                    {{else}}
+                      <form class="contact-form">
+                        <div class="content">
+                          {{> input seed='joe' label='First Name' type='text' placeholder='First Name' session='contact-name' limit=50 required=true}}
+                          {{> input seed='joe' label='Last Name' type='text' placeholder='Last Name' session='contact-surname' limit=50 required=true}}
+                          {{> input seed='joe' label='Email' type='email' placeholder='Email Address' session='contact-email' limit=50 skipInUse=true required=true}}
+                          {{> input seed='joe' label='Number' type='contactNumber' placeholder='Contact Number' session='contact-number' limit=15 required=true}}
+                          {{> input seed='joe' type='textarea' placeholder='Comments, queries, or feedback' session='contact-query' required=true}}
+                          <div class="controls">
+                            <button type="submit" class="special">Submit</button>
+                          </div>
+                        </div>
+                      </form>
+                    {{/if}}
+                  </li>
+                  <li class="item2">
+                    <div style="margin: 0px 0px -90px 10px; width: 300px; height:350px;">
+                      <img src="style/images/art/frog-chair.jpg" alt="">
+                    </div><br /><br />
+                    <div style="margin-left: 50px;">
+                      <strong>Do keep in touch...</strong><br />
+                      <p class="comm"><img class="comm-icon" src="style/images/icon-tel.png" /> Telephone: 021 555 2013</p><br />
+                      <p class="comm"><img class="comm-icon" src="style/images/icon-fax.png" /> Fax: 086 551 0406</p><br />
+                      <p class="comm"><img class="comm-icon" src="style/images/icon-email.png" /> 
+                        Email: <a href="mailto:info@toadit.co.za"> info@toadit.com</a></p>
+                    </div>
+                  </li>
+                  <li class="item" style="margin: 20px 0px 0px 0px;">
+                        <p><strong>Our Location</strong></p>
+                        <div style="margin-left:-9px;width:450px;height:250px;">{{> googleMap name="ourlocation" options=mapOptions}}</div>
+                        <!--<iframe src="872ed10c914ce71318573e18b4963003.html" style="margin-left: -9px;" width="500px" height="250px" scrolling="no"></iframe>-->
+                        <br />
+                        <strong>Address</strong><br />
+                        <div class="address">
+                          4th Floor, West Office Towers,<br />
+                          Canal Walk, Century City, Milnerton,<br />
+                          Cape Town, South Africa, 7442<br /><br />
+                        </div>
+                   </li>
+                </ul><br />
+                <div class="intro"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="back-to-top">Back to Top</a>
+</template>

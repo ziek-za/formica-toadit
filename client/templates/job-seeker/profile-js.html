@@ -1,0 +1,283 @@
+<template name="Profile_JS">
+	<!-- Progress of the candidate -->
+	{{> Profile_JS_Progress}}
+	<div class="profile-body-wrapper">
+		<div class="left-gutter js">
+			<div class="pp-wrapper" style="background-image:url('{{profile.picture.regular}}');">
+				{{#if canEdit}}
+					<div class="profile-control">
+						<div><i class="glyphicon glyphicon-cog"></i> <a href="{{pathFor route='Profile_JS_Edit' _id=this._id}}">Edit Profile</a></div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+		<!-- PROFILE DETAILS -->
+		<div class="details-wrapper">
+			<div class="profile-header">
+				<!-- PERSONAL -->
+				<div class="personal-details">
+					<h1>{{profile.personal_details.name}} {{profile.personal_details.surname}}</h1>
+					<h3><i class="glyphicon glyphicon-map-marker"></i> {{profile.personal_details.suburb}}, {{profile.personal_details.province}}</h3>
+				</div>
+				<!-- VIEWSHIP GRAPH -->
+				<div class="viewship-graph">
+					{{> Profile_JS_Views}}
+				</div>
+			</div>
+			<div class="profile-body content">
+				{{#if profile.progress}}
+					<div style="display:inline-block;width:70%;vertical-align:top;" class="content admin-specific">
+						<h3 class="content-header">Administration Details</h3>
+						<div class="content">
+							<h5 class="content-header">Comment/s</h5>
+							<div class="content">{{profile.progress.comment}}</div>
+						</div>
+					</div>
+					<div class="screening-admin">
+						<h5><i class="glyphicon glyphicon-user"></i> Screened by:</h5>
+						<div>{{profile.progress.assigned._id}}</div>
+					</div>
+				{{/if}}
+				<!-- CONTACT -->
+				<div class="content login-specific">
+					<h3 class="content-header">Contact Details</h3>
+					<div class="content">
+						<div><span class="detail-title">Telephone Number:</span> +27 {{profile.personal_details.tel_number}}</div>
+						<div><span class="detail-title">Cell Number:</span> +27 {{profile.personal_details.cell_number}}</div>
+					</div>
+				</div>
+				<div class="content login-specific inline">
+					<h3 class="content-header">Work details</h3>
+					<div class="content fill">
+						<h5 class="content-header">Curriculum Vitae for <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}</strong></h5>
+						<div class="content">
+							{{#if profile.cv}}
+								{{#each profile.cv}}
+									<div>
+										<strong>  <i class="glyphicon glyphicon-file"></i> {{name}}</strong><span style="padding:10px;"></span>
+										<a href="{{path}}" target="_blank">View</a>
+										/
+										<a href="{{path}}?download=true" target="_blank"><i class="glyphicon glyphicon-save"></i> Download</a>
+									</div>
+								{{/each}}
+							{{/if}}
+						</div>
+					</div>
+					<div class="content">
+						<h5 class="content-header">Role Requirements</h5>
+						<div class="content">
+							<div><span class="detail-title">Current Job:</span> {{profile.role_requirements.current_job}}</div>
+							<div><span class="detail-title">Desired Job:</span> {{profile.role_requirements.desired_job}}</div>
+						</div>
+					</div>
+					<div class="content">
+						<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>
+						<div class="content">
+							<div><span class="detail-title">Current Salary:</span> R {{profile.salary_details.current}}</div>
+							<div><span class="detail-title">Willing to move for:</span> R {{profile.salary_details.moveFor}}</div>
+							<div><span class="detail-title">Ideal Salary:</span> R {{profile.salary_details.ideal}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+	<template name="Profile_JS_Views">
+		 <div id="container-area" style="height:100%; width:100%;"></div>
+	</template>
+
+	<template name="Profile_JS_Progress">
+		<div class="progress-wrapper"><!--
+		--><div class="progress-ico verified">
+			<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>
+			<div class="details">
+				<div class="title">Verified Account</div>
+				<div class="sub-title"><strong>{{profile.personal_details.name}}</strong> has signed up with correct details and is verified</div>
+			</div>
+		</div><!--
+		--><div class="progress-ico pending{{#if equalsor3 profile.status 'active' 'placed' 'pending'}}{{else}} inactive{{/if}}">
+			{{#if equalsor3 profile.status 'active' 'placed' 'pending'}}<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>{{/if}}
+			<div class="details">
+				<div class="title">Pending Screening</div>
+				<div class="sub-title">Screening process includes rigourous analysis of Job Seeker details to ensure only top candidates are added to our system</div>
+			</div>
+		</div><!--
+		--><div class="progress-ico active{{#if equalsor2 profile.status 'active' 'placed'}}{{else}} inactive{{/if}}">
+			{{#if equalsor2 profile.status 'active' 'placed'}}<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>{{/if}}
+			<div class="details">
+				<div class="title">Active Account</div>
+				<div class="sub-title">If the candidate is successful in the screening process, they will be added to exisiting Job Seekers to be selected from</div>
+			</div>
+		</div><!--
+		--><div class="progress-ico placed {{#if equals profile.status 'placed'}}{{else}} inactive{{/if}}">
+			{{#if equals profile.status 'placed'}}<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>{{/if}}
+			<div class="details">
+				<div class="title">Placed</div>
+				<div class="sub-title">Successfuly employed candidates which are placed in the working field through our resource services</div>
+			</div>
+		</div><!--
+	--></div>
+	</template>
+
+<!-- EDIT -->
+<template name="Profile_JS_Edit">
+	<div class="content-wrapper">
+		<h1 class="header-1"><i class="glyphicon glyphicon-cog"></i> Edit <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}'s</strong> Profile</h1>
+		<div class="content">
+			<!-- ADMINISTRATION COMMANDS -->
+			{{#if isInRole 'admin'}}
+				<div class="content admin-specific inline">
+					<h3 class="content-header">Administration Specific Details</h3>
+					<div class="content">
+						<h5 class="content-header">Profile Status</h5>
+						<div class="content admin-commands-wrapper">						
+							{{> input seed='bvf' value=profile.status session='account-state' type='dropdown' data=accountStates}}
+							<div class="index">
+								<ul>
+									<li><strong>Active</strong> - The Job Seeker is verified and has gone through an internal screening. They will be listed under  available Job Seekers.</li>
+									<li><strong>Pending</strong> - The Job Seeker has registered and awaiting to be contacted by <i>ToadIT</i> staff. They will NOT be listed under available Job Seekers.</li>
+									<li><strong>Placed</strong> - The Job Seeker has gone through the <i>ToadIT</i> screening process and is placed in a company. They will NOT be listed under available Job Seekers.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="content">
+						<h5 class="content-header">Comments</h5>
+						<div class="content">
+							{{> input seed='bvf' value=profile.progress.comment session='progress-comment' type='textarea' placeholder='Add Something Extra' limit=120}}
+						</div>
+					</div>
+					<button class="js-save-admin">Save</button>
+					<button class="js-cancel">Cancel</button>
+				</div>
+			{{/if}}
+			<!-- LOGIN DETAILS -->
+			<div class="content login-specific inline">
+				<h3 class="content-header">Login Details</h3>
+				<div class="content">
+					<!-- PRIMARY EMAIL ADDRESS -->
+					<h5 class="content-header">Primary Email Address</h5>
+					<div class="content">
+						{{#if isOwnProfile}}
+							{{#if or emailChangeSuccess emailChangeFail}}
+								{{#if emailChangeSuccess}}
+									<div class="success-msg">{{{emailChangeSuccess}}}</div>
+								{{/if}}
+								{{#if emailChangeFail}}
+									<div class="error-msg">{{{emailChangeFail}}}</div>
+								{{/if}}
+							{{else}}
+								{{> input seed='gbd' session='email-address' label='Email Address' value=primaryEmail type='email' required=true}}
+								{{#if emailChangeError}}
+									<div class="error-msg">{{{emailChangeError}}}</div>
+								{{/if}}
+								<button class="js-save-email">Change Email</button>
+							{{/if}}
+						{{else}}
+							<i style="color:gray;">Details reserved for the profile owner.</i>
+						{{/if}}
+					</div>
+				</div>
+				<div class="content">
+					<!-- PASSWORD -->
+					<h5 class="content-header">Password</h5>
+					<div class="content">
+						{{#if isOwnProfile}}
+							{{#if or pwChangeFail pwChangeSuccess}}
+								{{#if pwChangeFail}}
+									<div class="error-msg">{{{pwChangeFail}}}</div>
+								{{/if}}
+								{{#if pwChangeSuccess}}
+									<div class="success-msg">{{{pwChangeSuccess}}}</div>
+								{{/if}}
+							{{else}}
+								{{> input seed='xyz' session='old-password' label='Old Password' type='password' required=true}}
+								{{> input seed='xyz' session='new-password' label='New Password' type='passwordPlaintext' gtlimit=8 required=true}}
+								{{> input seed='xyz' session='new-password-2' label='Repeat Password' type='passwordPlaintext' gtlimit=8 required=true}}
+								<div><small style="color:gray;"><i>Password is required to be greater than or equal to <strong>8</strong> characters.</i></small></div>
+								{{#if pwChangeError}}<div class="error-msg">{{{pwChangeError}}}</div>{{/if}}
+								<button class="js-save-password">Change Password</button>
+							{{/if}}
+						{{else}}
+							<i style="color:gray;">Details reserved for the profile owner.</i>
+						{{/if}}
+					</div>
+				</div>
+			</div>
+			<!-- PROFILE DETAILS -->
+			<h3 class="content-header">Profile Details</h3>
+			<div class="content inline">
+				<!-- PROFILE PICTURE -->
+				<div class="content">
+					<h5 class="content-header">Profile Picture</h5>
+					<div class="content">
+						<div class="profile-picture-wrapper">
+							<div class="profile-picture" style="background-image:url({{profile.picture.regular}});"></div>
+							<input type="file" class="js-image-input" />
+						</div>
+					</div>
+				</div>
+				<!-- PERSONAL -->
+				<div class="content">
+					<h5 class="content-header">Personal Details</h5>
+					<div class="content">
+						{{> input seed='abc' session='first-name' label='First Name' value=profile.personal_details.name type='text' required=true}}
+						{{> input seed='abc' session='surname' label='Surname' value=profile.personal_details.surname type='text' required=true}}
+						{{> input seed='abc' session='tel-number' label='Telephone Number' value=profile.personal_details.tel_number type='contactNumber' required=true limit=15}}
+						{{> input seed='abc' session='cell-number' label='Cell Number' value=profile.personal_details.cell_number type='contactNumber' required=true limit=15}}
+						{{> input seed='abc' session='suburb' label='Suburb' value=profile.personal_details.suburb type='text' required=false}}
+						{{> input seed='abc' session='province' label='Province' value=profile.personal_details.province type='combobox' required=true data=provinces}}
+						<!--value=profile.personal_details.province -->
+					</div>
+				</div>
+			</div>
+			<!-- USER DETAILS -->
+			<h3 class="content-header">Job Seeker Specific Details</h3>
+			<div class="content">
+				<h5 class="content-header">Role Requirements</h5>
+				<div class="content">
+					{{> input seed='abc' session='current-job' label='Current Job' value=profile.role_requirements.current_job type='combobox-other' required=true data=jobs}}
+					{{> input seed='abc' session='desired-job' label='Desired Job' value=profile.role_requirements.desired_job type='combobox-other' required=true data=jobs}}
+				</div>
+				<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>
+				<div class="content">
+					{{> input seed='abc' session='current-salary' label='Current Salary' value=profile.salary_details.current type='rand' required=true}}
+					{{> input seed='abc' session='move-for-salary' label='Willing To Move For' value=profile.salary_details.moveFor type='rand' required=true}}
+					{{> input seed='abc' session='ideal-salary' label='Ideal Salary' value=profile.salary_details.ideal type='rand' required=true}}
+				</div>
+				<!-- CV -->
+				<h5 class="content-header">CV Document <span class="main-colour-1">*</span></h5>
+				<div class="content">
+					<!--{{> input session='cv-file' label='Curriculum Vitae' value=profile.cv type='cv' required=true}}-->
+					{{#if showCVUpload}}
+						<div><i>You currently don't have a CV uploaded. In order to be listed, you will be required to have a CV.</i></div>
+						<div>
+							<input type="file" accept="application/pdf" class="js-cv-input" />
+							<br />
+							{{> cvRequirements}}
+						</div>
+					{{/if}}
+					{{#if profile.cv}}
+						{{#each profile.cv}}
+							<div>
+								<span style="cursor:pointer;padding-right:8px;" class="js-remove-cv">&times;</span>
+								<a href="{{path}}" target="_blank" class="{{#if toBeRemoved}}to-be-removed{{/if}}">{{name}}</a>
+								<small style="color:gray"> - <strong>Uploaded:</strong> {{uploaded}}</small> 
+							</div>
+						{{/each}}
+					{{/if}}
+					{{#if cvError}}
+						<span style="color:red;">
+							{{{cvError}}}
+						</span>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+		{{#if pageContainsError}}{{else}}<button class="js-save">Save</button>{{/if}}
+		<button class="js-cancel">Cancel</button>
+		{{#if pageContainsError}}<br /><small style="color:red;"><i><strong>Unable to save</strong> as the page contains errors, see above.</i></small>{{/if}}
+	</div>
+</template>

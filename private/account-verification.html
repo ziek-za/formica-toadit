@@ -1,0 +1,10 @@
+<h1 style="text-align:center;font-family:'Arial';color:#ff7e00;border-bottom:1px solid lightgray;padding-bottom:8px;">
+	Welcome to ToadIT {{#if jobSeeker}}<strong>{{user.profile.personal_details.name}} {{user.profile.personal_details.surname}}</strong>{{else}}<strong>{{user.profile.contact_person_details.name}} {{user.profile.contact_person_details.surname}}</strong>{{/if}}!
+</h1>
+<div style="padding:20px;text-align:center;width:40%;background-color:rgba(128, 128, 128, 0.3);margin:0 auto;">
+	<h3 style="font-family:'Arial';color:gray;">We are so happy to see you join our community of {{#if jobSeeker}}IT candidates{{else}}recognised companies{{/if}}, we are very excited to start working with you! Before we can do that, we need you to verify your account. <br /><br />You can do so by following the link below.</h3>
+	<a href="{{link}}"><div style="background-color:#ff7e00;color:white;padding:10px 15px;display:inline-block;">Verify Your Account</div></a>
+</div>
+<div style="padding:15px;font-size:16px;text-align:center;">
+	<a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/contact-us">Contact Us</a>  &bull;  <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/about-us">About Us</a>  &bull; <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/">Home</a>
+</div>

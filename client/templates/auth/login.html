@@ -1,0 +1,69 @@
+<!--<title>Job Seeker Login - Toad.IT</title>-->
+<template name="Login">
+	<!-- OVERLAY -->
+	{{#if overlay}}
+		<div class="overlay-wrapper">
+			<div class="overlay-content-box">
+				{{#if registerOverlay}}
+					{{> yield 'overlay'}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="overlay-blackout js-close-overlay"></div>
+	{{/if}}
+	<!-- LOGIN FORM -->
+	<div class="login-wrapper">
+		<div class="overlay-frog">
+			<img src="/style/images/art/froggy.png"/>
+		</div>
+		<form>
+			<div class="header">
+				<h1 style="{{#if equals this.key 'admin'}}color:red;{{/if}}">Login:
+					{{this.value}}
+				</h1>
+				<span>Please fill out the form below to proceed</span>
+			</div>
+			<div class="details">
+				{{#if logInError}}
+					<div class="error-msg">
+						{{logInError}}
+					</div>
+				{{/if}}
+				<input type="text" class="js-email" placeholder="Email Address" />
+				<input type="password" class="js-password" placeholder="Password" />
+				<div align="right"><a href="{{pathFor route='Login' _portal=this.key query='forgotPassword=true'}}">Forgot your password?</a></div>
+			</div>
+			<div class="controls">
+				<button action="submit" class="js-login special">Login</button>
+				{{#if equals this.key 'admin'}}{{else}}
+					<br />
+					<div class="register-query">
+						<span>Don't have an account? - </span>
+						<a href="	{{#if equals this.key 'job-seeker'}}
+										{{pathFor route='Login' query='register=true' _portal='job-seeker'}}
+									{{/if}}
+									{{#if equals this.key 'employer'}}
+										{{pathFor route='Login' query='register=true' _portal='employer'}}
+									{{/if}}">Register</a>
+					</div>
+				{{/if}}
+			</div>
+		</form>
+	</div>
+	<!-- NOTIFICATION SYSTEM -->
+	<div class="notification-wrapper">
+		{{#each notifications}}
+			{{> notification}}
+		{{/each}}
+	</div>
+</template>
+
+<template name="userControls">
+	{{#if currentUser}}
+      <div class="user-logout-controls">
+      	Logged in as 
+        <a href="{{#if isInRole 'admin'}}{{pathFor route='Profile_JS_Edit' _id=currentUser._id}}{{else}}{{pathFor route='Profile' _id=currentUser._id}}{{/if}}"><strong>{{#if currentUser.profile.personal_details}}{{currentUser.profile.personal_details.name}} {{currentUser.profile.personal_details.surname}}{{else}}{{currentUser.profile.company_details.name}}{{/if}}</strong></a>, 
+       <i><a href="" class="js-logout">Logout</a></i>
+      </div>
+    {{/if}}
+</template>

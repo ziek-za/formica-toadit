@@ -1,0 +1,104 @@
+<!--<title>Home - Toad.iT</title>-->
+<template name="Index">
+  <div id="page" class="hfeed">
+    <div id="wrapper">
+      <header id="branding" role="banner">
+        <h1 id="site-title"><a href="{{pathFor route='Home'}}"><img src="style/images/logo.png" alt=""><span id="serv">IT Recruitment Services</span></a></h1>
+        {{> userControls}}
+        <nav id="access" class="access" role="navigation">
+          <div id="menu" class="menu">
+            <ul id="tiny">
+              <li><a href="{{pathFor route='Home'}}"><div class="btn btn_contact">Home</div></a></li>
+              <li>
+                <a href="
+                  {{#if currentUser}}
+                    {{pathFor route='Search' query='type=employer'}}
+                  {{else}}
+                    {{pathFor route='Login' _portal='employer'}}
+                  {{/if}}
+                  "
+                ><div class="btn btn_employer">Employers</div></a>
+              </li>
+              <li>
+                <a href="
+                  {{#if currentUser}}
+                    {{pathFor route='Search' query='type=job-seeker'}}
+                  {{else}}
+                    {{pathFor route='Login' _portal='job-seeker'}}
+                  {{/if}}"
+                ><div class="btn btn_candidate">Job Seekers</div></a>
+              </li>
+              <li><a href="{{pathFor route='AboutUs'}}"><div class="btn btn_about">About Us</div></a></li>
+              <li><a href="{{pathFor route='ContactUs'}}"><div class="btn btn_contact">Contact</div></a></li>
+            </ul>
+          </div>
+          <div class="triangle-l"></div>
+          <div class="triangle-r"></div>
+        </nav>
+      </header>
+      <div class="yield-wrapper">
+        {{> yield}}
+      </div>
+      <div style="position:relative;">
+        <div class="social" align="right">
+          <ul>
+            <li><a href="#"><img src="style/images/icon-linkedin.png" alt=""></a></li>
+            <li><a href="#"><img src="style/images/icon-twitter.png" alt=""></a></li>
+            <li><a href="#"><img src="style/images/icon-facebook.png" alt=""></a></li>
+            <li><a href="#"><img src="style/images/icon-google.png" alt=""></a></li>
+          </ul>
+        </div>
+        <nav id="access" class="access" role="navigation" style="position:relative;">
+          <div id="menu" class="menu" align="left">
+            <ul id="tiny">
+              <li><span id="copyright">&copy; Copyright Toad.IT 2014. All rights reserved.</span></li>
+            </ul>
+            
+             
+            
+          </div>
+          <div class="triangle-l"></div>
+          <div class="triangle-r"></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <!-- NOTIFICATION SYSTEM -->
+  <div class="notification-wrapper">
+    {{#each notifications}}
+      {{> notification}}
+    {{/each}}
+  </div>
+</template>
+
+<!-- Notification System -->
+<template name="notification">
+  <div class="notification-item"><!--
+    --><div class="status-icon {{#if equals status 'success'}}success{{/if}}{{#if equals status 'warning'}}warning{{/if}}{{#if equals status 'fail'}}fail{{/if}}">
+      {{#if equals status 'success'}}
+        <i class="glyphicon glyphicon-ok-circle"></i>
+      {{/if}}
+      {{#if equals status 'warning'}}
+        <i class="glyphicon glyphicon-ban-circle"></i>
+      {{/if}}
+      {{#if equals status 'fail'}}
+        <i class="glyphicon glyphicon-remove-circle"></i>
+      {{/if}}
+    </div><!--
+    --><div class="message">{{{msg}}}</div><!--
+    --><div class="close"><i class="js-remove-notification glyphicon glyphicon-remove"></i></div><!--
+  --></div>
+</template>
+
+<!-- Used for loading -->
+<template name="loading">
+  <div style="width:100%;text-align:center;color:gray;"><span style="width:40px;height:40px;">{{> ajax_spinner}}</span></div>
+</template>
+  
+  <template name="ajax_spinner">
+    <img src="/ajax-loader.gif" alt="Loading...">
+  </template>
+
+  <template name="ajax_spinner_inline">
+    <div style="display:inline;vertical-align:middle;">{{> ajax_spinner}}</div>
+  </template>

@@ -1,0 +1,93 @@
+<template name="Admin_Users">
+	<div class="admin-section parent">
+		<div class="title">
+			<h2>Users</h2>
+		</div>
+		<div class="admin-section">
+			<div class="title">
+				<h4>Latest Users Registered</h4>
+			</div>
+			<div class="content">
+				<div>
+					<h5>Of which Employers</h5>
+					<div class="indent">
+						<div class="indent">
+							<ol>
+								<li>Employer A <a href="">(Profile)</a></li>
+								<li>Employer B <a href="">(Profile)</a></li>
+								<li>Employer C <a href="">(Profile)</a></li>
+								<li>Employer D <a href="">(Profile)</a></li>
+								<li>Employer E <a href="">(Profile)</a></li>
+							</ol>
+						</div>	
+					</div>
+				</div>
+				<div>
+					<h5>Of which Job Seekers:</h5>
+					<div class="indent">
+						<div class="indent">
+							<ol>
+								<li>Job Seeker A <a href="">(Profile)</a></li>
+								<li>Job Seeker B <a href="">(Profile)</a></li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="admin-section">
+			<div class="title">
+				<h4>Manage Administration Staff</h4>
+			</div>
+			<div class="content">
+				<h5>Add New Member</h5>
+				<div class="indent">
+					<i>This will generate a new 'Administration Account', granting 'Admin' priveledges to the user. An email will be sent to their email address with the necessary Login details.</i><br /><br />
+					<input class="js-admin-first-name" placeholder="First Name" />
+					<input class="js-admin-surname" placeholder="Surname" />
+					<input class="js-admin-email" placeholder="Email Address" />
+					<button class="js-generate-admin">Submit</button>
+				</div>
+				<h5>Search Exisiting Staff</h5>
+				<div class="indent">
+					<i>Search for exisiting administration staff.</i>
+					<input class="js-search" placeholder="User Query" />
+					<div class="indent">
+						<table style="width:100%;">
+							<thead>
+								<tr>
+									<th>First name</th>
+									<th>Surname</th>
+									<th>Email</th>
+									<th>Status level</th>
+								</tr>
+							</thead>
+							<tbody>
+							{{#if results}}
+								{{#each results}}
+									{{> administrationListItem}}
+								{{/each}}
+							{{else}}
+								<i>No users to manage.</i>
+							{{/if}}
+							</tbody>
+						</table>
+					</div> 
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+	<!-- Used for listing administration members -->
+	<template name="administrationListItem">
+		<tr>
+			<!-- First name -->
+			<td>{{profile.personal_details.name}}</td>
+			<!-- Surname -->
+			<td>{{profile.personal_details.surname}}</td>
+			<!-- Email address -->
+			<td>{{email}}</td>
+			<!-- Status level -->
+			<td>Admin</td>
+		</tr>
+	</template>

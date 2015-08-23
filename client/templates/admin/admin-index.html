@@ -1,0 +1,153 @@
+<template name="Admin_Index">
+	<div class="admin-index-wrapper">
+		<div class="header-wrapper">
+			<div class="title">
+				<h1><strong>ToadIT</strong> Administration Panel</h1>
+				{{> userControls}}
+			</div>
+		</div>
+		<div class="navbar-wrapper">
+			<ul>
+				<li><a href="{{pathFor route='Home'}}">ToadIT.com</a></li>
+			</ul>
+			<hr class="navbar" />
+			<ul>
+				<li><a href="{{pathFor route='Admin_Home'}}">Dashboard</a></li>
+				<li><a href="{{pathFor route='Admin_Users'}}">Users</a></li>
+				<li><a href="{{pathFor route='Admin_Reports'}}">Reports</a></li>
+			</ul>
+			<hr class="navbar" />
+			<ul>
+				<li><a href="{{pathFor route='Admin_Profile' _id=currentUser._id}}">Your Profile</a></li>
+			</ul>
+		</div>
+		<div class="content-wrapper">
+			<div class="admin-page-wrapper">
+				{{> yield}}
+			</div>
+		</div>
+	</div>
+</template>
+
+	<template name="Admin_Home">
+		<div class="admin-section parent">
+			<div class="title">
+				<h2>Dashboard</h2>
+			</div>
+			<div class="admin-section">
+				<div class="title">
+					<h4>Recent Search Queries</h4>
+				</div>
+				<div class="content">
+					<div>
+						<h5>Employers:</h5>
+						<div class="indent">
+							<i>No queries to show.</i>
+						</div>
+					</div>
+					<div>
+						<h5>Job Seekers:</h5>
+						<div class="indent">
+							<i>No queries to show.</i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="admin-section">
+				<div class="title">
+					<h4>Todays Traffic</h4>
+				</div>
+				<div class="content">
+					<div>
+						<strong><i>46 new views</i></strong>
+						<div class="indent">
+							- 20 Job Seekers
+							<br />
+							- 15 Employers
+							<br />
+							- 11 Unregistered
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template name="Admin_Reports">
+		<div class="admin-section parent">
+			<div class="title">
+				<h2>Reports</h2>
+			</div>
+			<div class="admin-section">
+				<div class="content">
+					<table>
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Employer</th>
+								<th>Job Seeker</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>July 2015</td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+							</tr>
+							<tr>
+								<td>June 2015</td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+							</tr>
+							<tr>
+								<td>May 2015</td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+								<td><a href="">View</a>/<a href="">Download</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template name="Admin_Profile">
+		<div class="admin-section parent">
+			<div class="title">
+				<h2>Your Profile</h2>
+			</div>
+			<div class="admin-section">
+				<div class="title">
+					<h4>Personal Details
+						<a href="" style="float:right;"><small>Edit</small></a>
+					</h4>
+				</div>
+				<div class="content">
+					<div>
+						<strong>Email address:</strong> test-admin@toadit.com<br/>
+						<strong>First name:</strong> first-name
+						<strong>Surname:</strong> surname
+					</div>
+				</div>
+			</div>
+			<div class="admin-section">
+				<div class="title">
+					<h4>Users Managed</h4>
+				</div>
+				<div class="content">
+					<h5>Employers</h5>
+					<div class="indent">
+						<i>You have not managed any Employers.</i>
+					</div>
+					<h5>Job Seekers</h5>
+					<div class="indent">
+						<i>You have not managed any Job Seekers.</i>
+					</div>
+					<h5>Administration Staff Added</h5>
+					<div class="indent">
+						<i>You have not added any Administration Staff to the Admin portal.</i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>

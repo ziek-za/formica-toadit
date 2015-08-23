@@ -1,0 +1,97 @@
+<template name="Profile_Emp">
+	<div class="profile-body-wrapper">
+		<div class="left-gutter empl">
+			<div class="pp-wrapper" style="background-image:url('{{profile.picture.regular}}');">
+				{{#if canEdit}}
+					<div class="profile-control">
+						<div><i class="glyphicon glyphicon-cog"></i> <a href="{{pathFor route='Profile_Emp_Edit' _id=this._id}}">Edit Profile</a></div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+		<!-- PROFILE DETAILS -->
+		<div class="details-wrapper">
+			<div class="profile-header">
+				<!-- PERSONAL -->
+				<div class="personal-details">
+					<h1>{{profile.company_details.name}}</h1>
+					<h3><i class="glyphicon glyphicon-map-marker"></i> {{profile.company_details.province}}</h3>
+					<h3><i class="glyphicon glyphicon-phone-alt"></i> {{profile.company_details.tel_number}}</h3>
+				</div>
+			</div>
+			<div class="profile-body content">
+				<!-- CONTACT -->
+				<div class="content login-specific inline">
+					<h3 class="content-header">Employer Representative</h3>
+					<div class="content">
+						<h5 class="content-header">Details</h5>
+						<div class="content">
+							<div><span class="detail-title">Name:</span> {{profile.contact_person_details.name}}</div>
+							<div><span class="detail-title">Surname:</span> {{profile.contact_person_details.surname}}</div>
+						</div>
+					</div>
+					<div class="content">
+						<h5 class="content-header">Contact</h5>
+						<div class="content">
+							<div><span class="detail-title">Number:</span> +27 {{profile.contact_person_details.contact}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- EDIT -->
+<template name="Profile_Emp_Edit">
+	<div class="content-wrapper">
+		<h1 class="header-1"><i class="glyphicon glyphicon-cog"></i> Edit <strong>{{profile.company_details.name}}'s</strong> Profile</h1>
+		<div class="content">
+			<!-- LOGIN DETAILS -->
+			{{> Profile_Edit_Login}}
+			<!-- PROFILE DETAILS -->
+			<h3 class="content-header">Profile Details</h3>
+			<div class="content inline">
+				<!-- PROFILE PICTURE -->
+				<div class="content">
+					<h5 class="content-header">Profile Picture</h5>
+					<div class="content">
+						<div class="profile-picture-wrapper">
+							<div class="profile-picture" style="background-image:url({{profile.picture.regular}});"></div>
+							<input type="file" class="js-image-input" />
+						</div>
+					</div>
+				</div>
+				<!-- PERSONAL -->
+				<div class="content">
+					<h5 class="content-header">Employer Details</h5>
+					<div class="content">
+						{{> input seed='cba' session='name' label='Employer Name' value=profile.company_details.name type='text' required=true}}
+						{{> input seed='cba' session='tel-number' label='Telephone Number' value=profile.company_details.tel_number type='contactNumber' required=true limit=15}}
+						{{> input seed='cba' session='province' label='Province' value=profile.company_details.province type='combobox' required=true data=provinces}}
+					</div>
+				</div>
+			</div>
+			<!-- USER DETAILS -->
+			<h3 class="content-header">Employer Representative</h3>
+			<div class="content inline">
+				<div class="content">
+					<h5 class="content-header">Details</h5>
+					<div class="content">
+						{{> input seed='cba' session='rep-name' label='Name' value=profile.contact_person_details.name type='text' required=true}}
+						{{> input seed='cba' session='rep-surname' label='Surname' value=profile.contact_person_details.surname type='text' required=true}}
+					</div>
+				</div>
+				<div class="content">
+					<h5 class="content-header">Contact</h5>
+					<div class="content">
+						{{> input seed='cba' session='rep-contact' label='Contact' value=profile.contact_person_details.contact type='contactNumber' required=true}}
+					</div>
+				</div>
+			</div>
+		</div>
+		{{#if pageContainsError}}{{else}}<button class="js-save">Save</button>{{/if}}
+		<button class="js-cancel">Cancel</button>
+		{{#if pageContainsError}}<br /><small style="color:red;"><i><strong>Unable to save</strong> as the page contains errors, see above.</i></small>{{/if}}
+	</div>
+</template>
