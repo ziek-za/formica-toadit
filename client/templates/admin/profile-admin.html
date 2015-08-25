@@ -1,0 +1,19 @@
+<template name="Profile_Admin_Edit">
+	<div class="content-wrapper">
+		<h1 class="header-1"><i class="glyphicon glyphicon-cog"></i> Edit <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}'s</strong> Profile</h1>
+		<div class="content">
+			<!-- LOGIN DETAILS -->
+			{{> Profile_Edit_Login}}
+			<h3 class="content-header">Profile Details</h3>
+			<div class="content">
+				<h5 class="content-header">Personal Details</h5>
+				<div class="content">
+					{{> input seed='vbn' value=this.profile.personal_details.name type='text' label='First Name' placeholder='First name' required=true session='admin-name'}}
+					{{> input seed='vbn' value=this.profile.personal_details.surname type='text' label='Surname' placeholder='Surname' required=true session='admin-surname'}}
+				</div>
+			</div>
+			<button class="js-save">Save</button>
+			<button class="js-cancel">Cancel</button>
+		</div>
+	</div>
+</template>

@@ -51,5 +51,21 @@ Meteor.methods({
 				'type': type
 			}
 		}, { upsert: true });
+	},
+	// Used to edit administration profile
+	UTIL_EditAdminProfile: function(targetUserId, profile) {
+		// Authorization
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsSelfOrRootAdmin", userId, targetUserId);
+		// Edit profile
+		Meteor.users.update({'_id':targetUserId}, {$set: {
+				'profile.personal_details': profile.personal_details
+			}
+		});
+	},
+	// Gets the admin profile
+	UTIL_GetAdmin: function(userId) {
+		var profile = Meteor.users.findOne({'_id':userId}).profile;
+		return profile;
 	}
 });

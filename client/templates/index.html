@@ -30,6 +30,9 @@
               </li>
               <li><a href="{{pathFor route='AboutUs'}}"><div class="btn btn_about">About Us</div></a></li>
               <li><a href="{{pathFor route='ContactUs'}}"><div class="btn btn_contact">Contact</div></a></li>
+              {{#if isInRole 'admin'}}
+                <li><a href="{{pathFor route='Admin_Home'}}"><div class="btn btn_admin">Admin</div></a></li>
+              {{/if}}
             </ul>
           </div>
           <div class="triangle-l"></div>

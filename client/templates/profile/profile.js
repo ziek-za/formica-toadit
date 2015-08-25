@@ -112,6 +112,12 @@ Template.Profile.helpers({
 				}
 			}
 			return true;
+		},
+		screeningAdmin: function() {
+			Meteor.call("UTIL_GetAdmin", this.profile.progress.assigned._id, function(err, admin) {
+				if (!err) { Session.set('screening-admin', admin); }
+			});
+			return Session.get('screening-admin');
 		}
 	});
  	Template.Profile_JS.events({});
@@ -385,3 +391,29 @@ function createChart(data) {
 		};
 	    createChart(data);
 	}
+
+	// Profile > Profile_Admin_Edit
+	Template.Profile_Admin_Edit.helpers({
+
+	});
+	Template.Profile_Admin_Edit.events({
+		// Used to save out changes to administration profile
+		"click .js-save": function(e, t) {
+			// verify input
+			if(!Input_check_errors('vbn')) { return; }
+			// get details
+			var profile = { personal_details: {}};
+			profile.personal_details.name = Session.get('admin-name');
+			profile.personal_details.surname = Session.get('admin-surname');
+			// Call to change admin profile
+			var targetUserId = this._id;
+			Meteor.call("UTIL_EditAdminProfile", targetUserId, profile, function(err) {
+				if (err) { Notify("There was an error saving changes to your profile: " + err.error, "fail"); }
+				else { Router.go("Home"); Notify("Successfully saved changes to your profile", "success"); }
+			});
+		},
+		"click .js-cancel": function(e, t) {
+			Router.go("Home");
+			Notify("Changes to your profile were cancelled.", "warning");
+		}
+	});

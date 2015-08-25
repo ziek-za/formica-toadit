@@ -1,12 +1,12 @@
 <template name="Admin_Index">
-	<div class="admin-index-wrapper">
-		<div class="header-wrapper">
+	<div class="admin-index-wrapper"><!--
+		--><div class="header-wrapper">
 			<div class="title">
 				<h1><strong>ToadIT</strong> Administration Panel</h1>
 				{{> userControls}}
 			</div>
-		</div>
-		<div class="navbar-wrapper">
+		</div><!--
+		--><div class="navbar-wrapper">
 			<ul>
 				<li><a href="{{pathFor route='Home'}}">ToadIT.com</a></li>
 			</ul>
@@ -18,15 +18,15 @@
 			</ul>
 			<hr class="navbar" />
 			<ul>
-				<li><a href="{{pathFor route='Admin_Profile' _id=currentUser._id}}">Your Profile</a></li>
+				<li><a href="{{pathFor route='Profile_Admin_Edit' _id=currentUser._id}}">Your Profile</a></li>
 			</ul>
-		</div>
-		<div class="content-wrapper">
+		</div><!--
+		--><div class="content-wrapper">
 			<div class="admin-page-wrapper">
 				{{> yield}}
 			</div>
-		</div>
-	</div>
+		</div><!--
+	--></div>
 </template>
 
 	<template name="Admin_Home">

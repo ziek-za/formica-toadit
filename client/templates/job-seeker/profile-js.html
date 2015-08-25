@@ -34,8 +34,8 @@
 						</div>
 					</div>
 					<div class="screening-admin">
-						<h5><i class="glyphicon glyphicon-user"></i> Screened by:</h5>
-						<div>{{profile.progress.assigned._id}}</div>
+						<h5><i class="glyphicon glyphicon-user"></i> Screening Admin:</h5>
+						<div>{{screeningAdmin.personal_details.name}} {{screeningAdmin.personal_details.surname}}</div>
 					</div>
 				{{/if}}
 				<!-- CONTACT -->
@@ -154,58 +154,7 @@
 				</div>
 			{{/if}}
 			<!-- LOGIN DETAILS -->
-			<div class="content login-specific inline">
-				<h3 class="content-header">Login Details</h3>
-				<div class="content">
-					<!-- PRIMARY EMAIL ADDRESS -->
-					<h5 class="content-header">Primary Email Address</h5>
-					<div class="content">
-						{{#if isOwnProfile}}
-							{{#if or emailChangeSuccess emailChangeFail}}
-								{{#if emailChangeSuccess}}
-									<div class="success-msg">{{{emailChangeSuccess}}}</div>
-								{{/if}}
-								{{#if emailChangeFail}}
-									<div class="error-msg">{{{emailChangeFail}}}</div>
-								{{/if}}
-							{{else}}
-								{{> input seed='gbd' session='email-address' label='Email Address' value=primaryEmail type='email' required=true}}
-								{{#if emailChangeError}}
-									<div class="error-msg">{{{emailChangeError}}}</div>
-								{{/if}}
-								<button class="js-save-email">Change Email</button>
-							{{/if}}
-						{{else}}
-							<i style="color:gray;">Details reserved for the profile owner.</i>
-						{{/if}}
-					</div>
-				</div>
-				<div class="content">
-					<!-- PASSWORD -->
-					<h5 class="content-header">Password</h5>
-					<div class="content">
-						{{#if isOwnProfile}}
-							{{#if or pwChangeFail pwChangeSuccess}}
-								{{#if pwChangeFail}}
-									<div class="error-msg">{{{pwChangeFail}}}</div>
-								{{/if}}
-								{{#if pwChangeSuccess}}
-									<div class="success-msg">{{{pwChangeSuccess}}}</div>
-								{{/if}}
-							{{else}}
-								{{> input seed='xyz' session='old-password' label='Old Password' type='password' required=true}}
-								{{> input seed='xyz' session='new-password' label='New Password' type='passwordPlaintext' gtlimit=8 required=true}}
-								{{> input seed='xyz' session='new-password-2' label='Repeat Password' type='passwordPlaintext' gtlimit=8 required=true}}
-								<div><small style="color:gray;"><i>Password is required to be greater than or equal to <strong>8</strong> characters.</i></small></div>
-								{{#if pwChangeError}}<div class="error-msg">{{{pwChangeError}}}</div>{{/if}}
-								<button class="js-save-password">Change Password</button>
-							{{/if}}
-						{{else}}
-							<i style="color:gray;">Details reserved for the profile owner.</i>
-						{{/if}}
-					</div>
-				</div>
-			</div>
+			{{> Profile_Edit_Login}}
 			<!-- PROFILE DETAILS -->
 			<h3 class="content-header">Profile Details</h3>
 			<div class="content inline">
@@ -215,7 +164,7 @@
 					<div class="content">
 						<div class="profile-picture-wrapper">
 							<div class="profile-picture" style="background-image:url({{profile.picture.regular}});"></div>
-							<input type="file" class="js-image-input" />
+							<!--<input type="file" class="js-image-input" />-->
 						</div>
 					</div>
 				</div>
