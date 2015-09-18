@@ -1,0 +1,137 @@
+<!-- LIST VACANCY -->
+<template name="Admin_Vacancies_List">
+	<div class="admin-section parent">
+		<div class="title">
+			<h2>List of Vacancies <a style="float:right;font-size:12px;" href="{{pathFor route='Admin_Vacancies_New'}}">Create New</a></h2>
+		</div>
+		<!-- publish date, company link, title, description-->
+		<div class="admin-section">
+			<div class="content">
+				<table style="width:100%;">
+					<thead>
+						<tr>
+							<th style="width:40%;">Title</th>
+							<th style="width:20%;">Date</th>
+							<th style="width:10%;">Link</th>
+							<th style="width:20%;text-align:center;">Published</th>
+							<th style="width:10%;">Edit</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#if .}}
+							{{#each .}}
+								<tr>
+									<td>{{vacancy.title}}</td>
+									<td>{{formattedDate}}</td>
+									<td><a href="{{vacancy.link}}">Link</a></td>
+									<td style="text-align:center;">
+										{{#if published}}
+											<i class="glyphicon glyphicon-ok" style="color:green;"></i>
+										{{else}}
+											<i class="glyphicon glyphicon-remove" style="color:red;"></i>
+										{{/if}}
+									</td>
+									<td><a href="{{pathFor route='Admin_Vacancies_Edit' _id=this._id}}">Edit</a></td>
+								</tr>
+							{{/each}}
+						{{else}}
+							<div style="margin-top:15p;width:100%;text-align:center;color:white;">
+								<i>No vacancies to be listed!</i>
+							</div>	
+						{{/if}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- NEW VACANCY -->
+<template name="Admin_Vacancies_New">
+	<div class="admin-section parent">
+		<div class="title">
+			<h2>Create New Vacancy</h2>
+		</div>
+		<!-- publish date, company link, title, description-->
+		<div class="admin-section">
+			<div class="content">
+				<form>
+					<div>
+						<p>Title</p>
+						<input placeholder="Vacancy Title" style="width:100%;" class="js-title" type="text" />
+					</div>
+					<div class="vacancy-details"><!--
+						--><div>
+							<p>Link</p>
+							<input placeholder="e.g. http://www.picknpay/vacancies" type="text" class="js-link" />
+						</div><!--
+						--><div>
+							<p>Publish Date</p>
+							<input placeholder="Click for dropdown" type="text" class="form-control js-publish-date" id="publish-datepicker" />
+						</div><!--
+					--></div>
+					<div class="vacancy-description">
+						<p>Description</p>
+						<textarea placeholder="Vacancy description" class="js-description"></textarea>
+					</div>
+					<button action="submit" class="js-submit">Create</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- EDIT VACANCY -->
+<template name="Admin_Vacancies_Edit">
+	<div class="admin-section parent">
+		<div class="title">
+			<h2>Edit Vacancy</h2>
+		</div>
+		<!-- publish date, company link, title, description-->
+		<div class="admin-section">
+			<div class="content">
+				<div style="width:100%;padding:10px; background-color:rgba(0,0,0,0.35);color:white;margin:10px 0;">
+					{{#if published}}
+						<span style="color:green;">This vacancy is currently published.</span><br />
+						<p style="color:lightgray;font-size:12px;padding-left:5px;">This vacancy is publicly available Job Seekers.</p>
+					{{else}}
+						This vacancy is currently <strong>NOT</strong> published.<br />
+						<p style="color:lightgray;font-size:12px;padding-left:5px;">This vacancy can not be seen by Job Seekers.</p>
+					{{/if}}
+				</div>
+				<div style="margin:8px 0;width:100%;text-align:right;">Author ID: {{author._id}}</div>
+				<form>
+					<div>
+						<p>Title</p>
+						<input value="{{vacancy.title}}" placeholder="Vacancy Title" style="width:100%;" class="js-title" type="text" />
+					</div>
+					<div class="vacancy-details"><!--
+						--><div>
+							<p>Link</p>
+							<input value="{{vacancy.link}}" placeholder="e.g. http://www.picknpay/vacancies" type="text" class="js-link" />
+						</div><!--
+						--><div>
+							<p>Publish Date</p>
+							<input value="{{vacancy.publish_date}}" placeholder="Click for dropdown" type="text" class="form-control js-publish-date" id="publish-datepicker" />
+						</div><!--
+					--></div>
+					<div class="vacancy-description">
+						<p>Description</p>
+						<textarea placeholder="Vacancy description" class="js-description">{{vacancy.description}}</textarea>
+					</div>
+					<div>
+						<button action="submit" class="js-save">Save</button>
+						<button class="js-toggle-publish special">
+							{{#if published}}
+								Unpublish
+							{{else}}
+								Publish
+							{{/if}}
+						</button>
+						<button class="js-remove" style="float:right;">Remove</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</template>

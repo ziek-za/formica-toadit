@@ -10,13 +10,17 @@
 			<ul>
 				<li><a href="{{pathFor route='Home'}}">ToadIT.com</a></li>
 			</ul>
-			<hr class="navbar" />
+			<hr class="navbar-hr" />
 			<ul>
 				<li><a href="{{pathFor route='Admin_Home'}}">Dashboard</a></li>
 				<li><a href="{{pathFor route='Admin_Users'}}">Users</a></li>
 				<li><a href="{{pathFor route='Admin_Reports'}}">Reports</a></li>
 			</ul>
-			<hr class="navbar" />
+			<hr class="navbar-hr" />
+			<ul>
+				<li><a href="{{pathFor route='Admin_Vacancies_List'}}">Vacancies</a></li>
+			</ul>
+			<hr class="navbar-hr" />
 			<ul>
 				<li><a href="{{pathFor route='Profile_Admin_Edit' _id=currentUser._id}}">Your Profile</a></li>
 			</ul>
@@ -42,13 +46,29 @@
 					<div>
 						<h5>Employers:</h5>
 						<div class="indent">
-							<i>No queries to show.</i>
+							{{#if queriesEmp}}
+								<ul>
+									{{#each queriesEmp}}
+										{{> dashboardQueryItem}}
+									{{/each}}
+								</ul>
+							{{else}}
+								<i>No queries to show for 'Employers'</i>
+							{{/if}}
 						</div>
 					</div>
 					<div>
 						<h5>Job Seekers:</h5>
 						<div class="indent">
-							<i>No queries to show.</i>
+							{{#if queriesJS}}
+								<ul>
+									{{#each queriesJS}}
+										{{> dashboardQueryItem}}
+									{{/each}}
+								</ul>
+							{{else}}
+								<i>No queries to show for 'Job Seekers'</i>
+							{{/if}}
 						</div>
 					</div>
 				</div>
@@ -69,6 +89,64 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</template>
+
+		<template name="dashboardQueryItem">
+			<li>
+				<strong>Date: </strong>{{dateF x}}&emsp;<strong>Total Queries: </strong>{{y}}{{#if equals type 'job-seeker'}}&emsp;<a href="{{pathFor route='Admin_QueryInfo' _id=_id}}" target="_blank">View</a>{{/if}}
+				<ul>
+					{{#if equals type 'employer'}}
+						{{#each queries}}
+							<li>
+								<strong>Query - </strong> {{#if query}}{{query}}{{else}}<i>None</i>{{/if}} / 
+								<strong>Province - </strong> {{#if province}}{{province}}{{else}}<i>None</i>{{/if}}
+							</li>
+						{{/each}}
+					{{else}}
+						{{#each queries}}
+							<li>
+								<strong>Province - </strong> {{#if province}}{{province}}{{else}}<i>None</i>{{/if}} / 
+								<strong>Desired Position - </strong> {{#if position.desired}}{{position.desired}}{{else}}<i>None</i>{{/if}}...
+							</li>
+						{{/each}}
+					{{/if}}
+				</ul>
+			</li>
+		</template>
+
+	<template name="Admin_QueryInfo">
+		<div class="query-wrapper">
+			<div >Displaying All <strong>Job Seeker</strong> Queries For <strong>{{x}}</strong></div>
+			<div class="sub-header">Total Queries: <strong>{{y}}</strong></div>
+			<div class="query-body-wrapper">
+				{{#each queries}}
+					<div class="query-item-wrapper"><!--
+						--><div class="general">
+							<strong>Province: </strong>&emsp;{{province}}<br />
+							<strong>Desired Position: </strong>&emsp;{{position.desired}}<br />
+							<strong>Searched By: </strong>&emsp;{{user._id}}
+						</div><!--
+						--><div class="specific">
+							<strong>Current Salary:</strong>
+							<div class="indent">
+								<strong>From: </strong>&emsp;R {{#if current_salary.from}}{{current_salary.from}}{{else}}--.--{{/if}}<br />
+								<strong>To: </strong>&emsp;R {{#if current_salary.to}}{{current_salary.to}}{{else}}--.--{{/if}}<br />
+							</div>
+							<strong>Move For Salary:</strong>
+							<div class="indent">
+								<strong>From: </strong>&emsp;R {{#if moveFor_salary.from}}{{moveFor_salary.from}}{{else}}--.--{{/if}}<br />
+								<strong>To: </strong>&emsp;R {{#if moveFor_salary.to}}{{moveFor_salary.to}}{{else}}--.--{{/if}}<br />
+							</div>
+							<strong>Ideal Salary:</strong>
+							<div class="indent">
+								<strong>From: </strong>&emsp;R {{#if ideal_salary.from}}{{ideal_salary.from}}{{else}}--.--{{/if}}<br />
+								<strong>To: </strong>&emsp;R {{#if ideal_salary.to}}{{ideal_salary.to}}{{else}}--.--{{/if}}<br />
+							</div>
+						</div><!--
+					--></div>
+				{{/each}}
 			</div>
 		</div>
 	</template>

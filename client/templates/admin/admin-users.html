@@ -12,13 +12,7 @@
 					<h5>Of which Employers</h5>
 					<div class="indent">
 						<div class="indent">
-							<ol>
-								<li>Employer A <a href="">(Profile)</a></li>
-								<li>Employer B <a href="">(Profile)</a></li>
-								<li>Employer C <a href="">(Profile)</a></li>
-								<li>Employer D <a href="">(Profile)</a></li>
-								<li>Employer E <a href="">(Profile)</a></li>
-							</ol>
+							<i>No New 'Employers' Registered.</i>
 						</div>	
 					</div>
 				</div>
@@ -26,10 +20,7 @@
 					<h5>Of which Job Seekers:</h5>
 					<div class="indent">
 						<div class="indent">
-							<ol>
-								<li>Job Seeker A <a href="">(Profile)</a></li>
-								<li>Job Seeker B <a href="">(Profile)</a></li>
-							</ol>
+							<i>No New 'Job Seekers' Registered.</i>
 						</div>
 					</div>
 				</div>
@@ -56,10 +47,13 @@
 						<table style="width:100%;">
 							<thead>
 								<tr>
-									<th>First name</th>
-									<th>Surname</th>
-									<th>Email</th>
-									<th>Status level</th>
+									<th style="width:20%;">First name</th>
+									<th style="width:20%;">Surname</th>
+									<th style="width:30%;">Email</th>
+									<th style="width:20%;">Status level</th>
+									{{#if isInRole 'root'}}
+										<th style="width:10%;">Edit</th>
+									{{/if}}
 								</tr>
 							</thead>
 							<tbody>
@@ -88,6 +82,9 @@
 			<!-- Email address -->
 			<td>{{email}}</td>
 			<!-- Status level -->
-			<td>Admin</td>
+			<td>{{#each roles}}{{.}} {{/each}}</td>
+			{{#if isInRole 'root'}}
+				<td><a href="{{pathFor route='Profile_Admin_Edit' _id=_id}}">Edit</a></td>
+			{{/if}}
 		</tr>
 	</template>

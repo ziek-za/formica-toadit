@@ -56,7 +56,7 @@ AdminSearchSelector = function(query) {
       		{'profile.personal_details.name': {$regex: regexQuery, $options: "ig"}},
       		{'profile.personal_details.surname': {$regex: regexQuery, $options: "ig"}}
       	]},
-      	{ 'roles': {$in: ["admin"]}}
+      	{ 'roles': {$in: ["admin", "revoked-admin"]}}
 	]};
 	return selector;
 };

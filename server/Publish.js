@@ -27,3 +27,9 @@ Meteor.publish('profilecv', function(userId) {
 
 // Test for upload
 Meteor.publish('images', function(){ return Images.find(); });
+
+// Queries
+Meteor.publish('queries', function(selector, options) { return Queries.find(selector, options); });
+
+// Vacancies
+Meteor.publish('vacancies', function(selector, options) { return Vacancies.find(selector, options); });

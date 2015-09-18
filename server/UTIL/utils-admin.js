@@ -38,6 +38,7 @@ Meteor.methods({
 	UTIL_LogQuery: function(query, type) {
 		// Check to see if the user is logged in
 		if (!Meteor.userId()) { return; }
+		query.user = {}; query.user._id = Meteor.userId();
 		var td = new Date();
 		var tdUTC = new Date(Date.UTC(td.getFullYear(), td.getMonth() + 1, td.getDate(), 0,0,0));
 		Queries.update({'x':tdUTC, 'type': type}, {
@@ -67,5 +68,71 @@ Meteor.methods({
 	UTIL_GetAdmin: function(userId) {
 		var profile = Meteor.users.findOne({'_id':userId}).profile;
 		return profile;
+	},
+	// Remove admin
+	UTIL_RemoveAdmin: function(targetUserId)  {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsRoot", userId);
+		Meteor.users.remove(targetUserId);
+	},
+	// Changes admin priveledges
+	UTIL_ToggleRevokeAdmin: function(targetUserId) {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsRoot", userId);
+		if (Roles.userIsInRole(targetUserId, 'revoked-admin')) {
+			Roles.setUserRoles(targetUserId, 'admin');
+		} else if (Roles.userIsInRole(targetUserId, 'admin')) {
+			Roles.setUserRoles(targetUserId, 'revoked-admin');
+		}
+	},
+	// Used to create a new vacancy
+	UTIL_CreateNewVacancy: function(vacancy) {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsAdmin", userId);
+		// Add to vacancies collection
+		var id = Vacancies.insert({
+			vacancy: vacancy,
+			published: false,
+			createdAt: new Date(),
+			author: {
+				_id: userId
+			}
+		});
+		return id;
+	},
+	// Used to save changes made to a vacancy post
+	UTIL_SaveVacancy: function(vacancyId, vacancy) {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsAdmin", userId);
+		// make changes
+		Vacancies.update({'_id': vacancyId}, {$set: {
+				vacancy: vacancy
+			}
+		});
+	},
+	// Used to toggle vacancy publish status
+	UTIL_ToggleVacancyPublish: function(vacancyId) {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsAdmin", userId);
+		// toggle publish status
+		var status = Vacancies.findOne({'_id':vacancyId}).published;
+		status = !status;
+		Vacancies.update({'_id': vacancyId}, {$set: {
+				published: status
+			}
+		});
+	},
+	// Used to remove a vacancy position
+	UTIL_RemoveVacancy: function(vacancyId) {
+		// auth
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsAdmin", userId);
+		// remove
+		Vacancies.remove({'_id':vacancyId});
 	}
 });

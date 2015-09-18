@@ -2,6 +2,25 @@
 	<div class="content-wrapper">
 		<h1 class="header-1"><i class="glyphicon glyphicon-cog"></i> Edit <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}'s</strong> Profile</h1>
 		<div class="content">
+			<!-- ADMINISTRATION COMMANDS -->
+			{{#if isInRole 'root'}}
+				<div class="content admin-specific inline">
+					<h3 class="content-header">Root Control</h3>
+					<div class="content">
+						<h5 class="content-header">Remove</h5>
+						<div class="content admin-commands-wrapper">						
+							<button class="js-remove special">Remove</button>
+						</div>
+					</div>
+					<div class="content">
+						<h5 class="content-header">Revoke Admin Rights</h5>
+						<div class="content">
+							<button class="js-revoke">
+								{{#if isRevoked}}Give Adminship{{else}}Revoke{{/if}}</button>
+						</div>
+					</div>					
+				</div>
+			{{/if}}
 			<!-- LOGIN DETAILS -->
 			{{> Profile_Edit_Login}}
 			<h3 class="content-header">Profile Details</h3>

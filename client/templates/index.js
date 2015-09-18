@@ -11,6 +11,9 @@ Template.registerHelper('equalsor2', function (a, b, c) {
 Template.registerHelper('equalsor3', function (a, b, c, d) {
 	return a === b || a === c || a === d;
 });
+Template.registerHelper('isSelf', function (_id) {
+	return Meteor.userId() === _id;
+});
 Template.userControls.events({
 	"click .js-logout": function(e, t) {
 		Meteor.logout(function(err) {

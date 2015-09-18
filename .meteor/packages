@@ -21,10 +21,14 @@ cfs:gridfs
 cfs:graphicsmagick #for resizing
 cfs:ejson-file
 # For glyphicons
-bootstrap3:glyphicons
+nemo64:bootstrap
+twbs:bootstrap-noglyph
+#bootstrap3:glyphicons
 # For graphing views on Job Seeker profiles
 maazalik:highcharts
 # Used for Google maps location under 'About Us'
 dburles:google-maps
 # For sending emails
 email
+# For date picking
+rajit:bootstrap3-datepicker

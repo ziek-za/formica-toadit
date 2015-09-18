@@ -1,0 +1,52 @@
+<!-- Vacancy List -->
+<template name="Vacancies_List">
+	<div class="vacancies-list-wrapper">
+		<h1 class="header-1"><i class=" glyphicon glyphicon-list"></i> Advertised Vacancies</h1>
+		<div class="content first">
+			{{#if .}}
+				{{#each .}}
+					<h5 class="content-header">{{vacancy.title}} <div style="float:right;font-size:14px;">Published {{formattedDate}}</div></h5>
+					<div class="content">
+						{{vacancy.description}}
+						{{#if vacancy.link}}
+							<div class="indent">
+								- <a href="{{vacancy.link}}">{{vacancy.link}}</a>
+							</div>
+						{{/if}}
+					</div>
+				{{/each}}
+			{{else}}
+				<div style="text-align:center;margin-top:20px;color:gray;">
+					<i>No vacancies to show.</i>
+				</div>
+			{{/if}}
+		</div>
+	</div>
+</template>
+<!-- Home Page Vacancy Item -->
+<template name="homepageVacancyItem">
+	<div class="homepage-vacancy-item-wrapper">
+		{{#if vacancy.link}}
+			<a href="{{vacancy.link}}" target="_blank">
+				<div class="vacancy-item-header">
+					{{#if vacancy.link}}
+						<a href="{{vacancy.link}}" target="_blank">{{vacancy.title}}</a>
+					{{else}}
+						{{vacancy.title}}
+					{{/if}}
+				</div>
+				<div class="vacancy-item-description">{{vacancy.description}}</div>
+			</a>
+		{{else}}
+			<div class="vacancy-item-header">
+				{{#if vacancy.link}}
+					<a href="{{vacancy.link}}" target="_blank">{{vacancy.title}}</a>
+				{{else}}
+					{{vacancy.title}}
+				{{/if}}
+			</div>
+			<div class="vacancy-item-description">{{vacancy.description}}</div>
+		{{/if}}
+	</div>
+	<div class="vacancy-item-date">Published {{formattedDate}}</div>
+</template>

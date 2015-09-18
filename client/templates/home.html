@@ -1,6 +1,7 @@
 <!--<title>Toad.iT</title>-->
 <template name="Home">
-  <div id="page2" class="hfeed">
+  <div class="homepage-wrapper"><!--
+  --><div id="page2" class="hfeed">
     <div id="wrapper2">
       <div id="main">
         <div id="primary">
@@ -10,7 +11,7 @@
                 <ul class="gallery-items">
                   <li class="item">
                     <br />
-                    <div class="image1 emp"><a href="{{pathFor route='Login' _portal='employer'}}"><img src="style/images/art/employers.jpg" alt=""></a></div>
+                    <div class="image1 emp"><a href="{{pathFor route='Login' _portal='employer'}}"><img src="/style/images/art/employers.jpg" alt=""></a></div>
                     <br /><br />
                       <p class="ask">
                         Are you looking for the best IT talents in South Africa? <br /><br />
@@ -18,11 +19,11 @@
                       </p>
                   </li>
                   <li class="item">
-                    <div style="margin: 20px -50px -70px -40px; width: 300px; height:350px;"><img src="style/images/art/frog.jpg" alt=""></div>
+                    <div style="margin: 20px -50px -70px -40px; width: 300px; height:350px;"><img src="/style/images/art/frog.jpg" alt=""></div>
                   </li>
                   <li class="item">
                     <br />
-                    <div class="image1 job-s"><a href="{{pathFor route='Login' _portal='job-seeker'}}"><img src="style/images/art/job-seekers.jpg" alt=""></a></div>
+                    <div class="image1 job-s"><a href="{{pathFor route='Login' _portal='job-seeker'}}"><img src="/style/images/art/job-seekers.jpg" alt=""></a></div>
                     <br /><br />
                       <p class="ask">
                         Are you looking for a new challenge in IT?<br /><br />
@@ -37,5 +38,18 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><!--
+ --><div class="homepage-vacancy-wrapper">
+    <div class="head-title">Advertised Vacancies</div>
+    {{#if vacancies}}
+      {{#each vacancies}}
+        {{> homepageVacancyItem}}
+      {{/each}}    
+      <br />
+      <a class="view-more" href="{{pathFor route='Vacancies_List'}}">View More ></a>
+    {{else}}
+      <div style="width:100%; text-align:center; color:gray; font-size:13px"><i>No vacancies to show.</i></div>
+    {{/if}}
+  </div><!--
+--></div>
 </template>

@@ -18,7 +18,7 @@ div.admin-index-wrapper {
 			padding:10px 0;
 			vertical-align:center;
 			background-color:@admin-colour-2;
-			height:40px;
+			height:60px;
 			position:relative;
 
 			h1 { 
@@ -84,9 +84,36 @@ div.admin-index-wrapper {
 	}
 }
 
-hr.navbar {
+hr.navbar-hr {
 	background-color:@admin-colour-2;
 	border:none;
 	margin:4px 10px !important;
 	height:1px;
 }
+
+// QUERY INFO PAGE
+.query-wrapper {
+	color:lightgray;
+	.query-body-wrapper {
+		.query-item-wrapper {
+			display:table; width:100%;
+			margin-bottom:5px;border-bottom:1px solid rgba(255,255,255,0.2);
+			.general { width:40%; vertical-align:middle; background-color:rgba(255,255,255,0.1); }
+			.specific { width:60%; }
+			.general,
+			.specific { display:table-cell; padding:10px; }
+		}
+	}
+}
+
+ // VACANCIES
+ .vacancy-details {
+ 	display:table; width:100%;
+ 	div {
+ 		width:50%; display:table-cell; padding-right:8px;
+ 		input { width:100%; }
+	}
+ }
+ .vacancy-description {
+ 	textarea { height:120px;width:100%; }
+ }

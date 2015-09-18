@@ -41,8 +41,11 @@ form.contact-form {
 	position:fixed;
 	right:0; top:0;
 	padding:20px;
+	z-index:99999999;
 	width:20%;
+	pointer-events:none;
 	.notification-item {
+		pointer-events:all;
 		z-index:99999999;
 		border:1px solid lightgray;
 		position:relative;
@@ -383,6 +386,21 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 	color: #808080;
 }
 
+.navbar-menu {
+	background-color: #646161; text-align:center;
+	margin:0 -5px 20px -5px;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+	ul {
+		margin:0;
+		a {
+			color:white;
+			li { display: inline-block; padding: 10px 20px }
+		}
+		a:hover { color:@main-colour-1;}
+		a:hover > li { background-color: rgba(66, 66, 66, 1); }
+	}	
+}
+
  // Tables
  table {
  	width:100%;
@@ -562,7 +580,8 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 
 // PAGE LAYOUT
 .content-wrapper,
-.profile-wrapper {	
+.profile-wrapper,
+.vacancies-list-wrapper {	
 	.header-1 {
 		text-transform:capitalize;
 		border-bottom:1px solid @main-colour-1;
@@ -849,3 +868,48 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 		}
 	}
 }
+
+// HOME
+.homepage-wrapper {
+	display:table;
+	width:100%;
+	.hfeed,.homepage-vacancy-wrapper { display:table-cell; vertical-align:top; }
+	.hfeed { width:80%; }
+	.homepage-vacancy-wrapper { width:20%; }
+}
+.homepage-vacancy-wrapper {
+	padding:0 8px; border-left:1px solid lightgray;height:100%;
+	.head-title { color:gray; font-size:17px; border-bottom:1px solid lightgray; margin-bottom:5px; padding-bottom:5px; padding-left:10px;}
+	.view-more { width:100%; border-top:1px solid lightgray; padding-top:8px;margin-top:10px; text-align:right; font-size:12px; display:block; }
+}
+.homepage-vacancy-item-wrapper {
+	background-color:rgba(240, 240, 240, 1);
+	padding:5px;width:250px;
+	.vacancy-item-header {
+		font-size:13px; line-height:14px; color:rgba(156, 156, 156, 1) !important; font-weight:bold;
+	}
+	.vacancy-item-description {
+		font-size:13px; line-height:15px;
+		white-space: nowrap;
+  		overflow: hidden; color:rgba(156, 156, 156, 1) !important;
+		padding:4px; text-overflow:ellipsis;
+		-webkit-transition: all 250ms ease-in-out;
+      	transition: all 250ms ease-in-out;
+	}
+		
+}
+.vacancy-item-date {
+	font-size:10px; line-height:12px;
+	text-align:right; font-style:italic;
+	color:rgba(156, 156, 156, 1) !important;
+	margin-bottom:5px; padding-top:4px;
+}
+.homepage-vacancy-item-wrapper:hover .vacancy-item-description {
+	white-space: normal;
+}
+.homepage-vacancy-item-wrapper:hover { background-color: rgba(222, 222, 222, 1); }
+
+	// vacancies list
+	.vacancies-list-wrapper {
+		.content.first { width:75%; margin:0 auto; }
+	}

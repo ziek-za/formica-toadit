@@ -415,5 +415,26 @@ function createChart(data) {
 		"click .js-cancel": function(e, t) {
 			Router.go("Home");
 			Notify("Changes to your profile were cancelled.", "warning");
+		},
+		// Used to remove a admin
+		"click .js-remove": function() {
+			var targetUserId = this._id;
+			Meteor.call("UTIL_RemoveAdmin", targetUserId, function(err) {
+				if (err) { Notify("There was an error with removing an admin: " + err.error, "fail"); }
+				else {
+					Notify("Successfully removed admin!", "success");
+					Router.go("Home");
+				}
+			});
+		},
+		// Used to revoke rights
+		"click .js-revoke": function() {
+			var targetUserId = this._id;
+			Meteor.call("UTIL_ToggleRevokeAdmin", targetUserId, function(err) {
+				if (err) { Notify("There was an error with changing admin priviledges: " + err.error, "fail"); }
+				else {
+					Notify("Successfully changed admin priviledges!", "success");
+				}
+			});
 		}
 	});

@@ -1,3 +1,27 @@
+// HOME (DASHBOARD)
+Template.Admin_Home.helpers({
+    queriesEmp: function() {
+        // Get queries for employers from today and yesterday
+        var yd = new Date();
+        var tdUTC = new Date(Date.UTC(yd.getFullYear(), yd.getMonth() + 1, yd.getDate() - 2, 0,0,0));
+        selector = {'type': 'employer', 'x': {$gt: tdUTC}};
+        options = {limit: 2};
+        Meteor.subscribe('queries', selector, options);
+        return Queries.find(selector, options).fetch();
+    },
+    queriesJS: function() {
+        // Get queries for employers from today and yesterday
+        var yd = new Date();
+        var tdUTC = new Date(Date.UTC(yd.getFullYear(), yd.getMonth() + 1, yd.getDate() - 2, 0,0,0));
+        selector = {'type': 'job-seeker', 'x': {$gt: tdUTC}};
+        options = {limit: 2};
+        Meteor.subscribe('queries', selector, options);
+        return Queries.find(selector, options).fetch();
+    }
+});
+    Template.dashboardQueryItem.helpers({
+        dateF: function(date) { return date.format("dddd, mmm yy"); }
+    });
 // USERS
 Template.Admin_Users.created = function() {
 	Session.set('admin-search', '');

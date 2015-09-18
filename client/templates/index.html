@@ -3,41 +3,36 @@
   <div id="page" class="hfeed">
     <div id="wrapper">
       <header id="branding" role="banner">
-        <h1 id="site-title"><a href="{{pathFor route='Home'}}"><img src="style/images/logo.png" alt=""><span id="serv">IT Recruitment Services</span></a></h1>
+        <h1 id="site-title"><a href="{{pathFor route='Home'}}"><img src="/logo.png" alt=""><span id="serv">IT Recruitment Services</span></a></h1>
         {{> userControls}}
-        <nav id="access" class="access" role="navigation">
-          <div id="menu" class="menu">
-            <ul id="tiny">
-              <li><a href="{{pathFor route='Home'}}"><div class="btn btn_contact">Home</div></a></li>
-              <li>
-                <a href="
-                  {{#if currentUser}}
-                    {{pathFor route='Search' query='type=employer'}}
-                  {{else}}
-                    {{pathFor route='Login' _portal='employer'}}
-                  {{/if}}
-                  "
-                ><div class="btn btn_employer">Employers</div></a>
-              </li>
-              <li>
-                <a href="
-                  {{#if currentUser}}
-                    {{pathFor route='Search' query='type=job-seeker'}}
-                  {{else}}
-                    {{pathFor route='Login' _portal='job-seeker'}}
-                  {{/if}}"
-                ><div class="btn btn_candidate">Job Seekers</div></a>
-              </li>
-              <li><a href="{{pathFor route='AboutUs'}}"><div class="btn btn_about">About Us</div></a></li>
-              <li><a href="{{pathFor route='ContactUs'}}"><div class="btn btn_contact">Contact</div></a></li>
-              {{#if isInRole 'admin'}}
-                <li><a href="{{pathFor route='Admin_Home'}}"><div class="btn btn_admin">Admin</div></a></li>
-              {{/if}}
-            </ul>
-          </div>
-          <div class="triangle-l"></div>
-          <div class="triangle-r"></div>
-        </nav>
+        <div class="navbar-menu">
+          <ul>
+            <a href="{{pathFor route='Home'}}"><li>Home</li></a>
+            <a href="
+                {{#if currentUser}}
+                  {{pathFor route='Search' query='type=employer'}}
+                {{else}}
+                  {{pathFor route='Login' _portal='employer'}}
+                {{/if}}
+                ">
+              <li>Employers</li>
+            </a>
+            <a href="
+                {{#if currentUser}}
+                  {{pathFor route='Search' query='type=job-seeker'}}
+                {{else}}
+                  {{pathFor route='Login' _portal='job-seeker'}}
+                {{/if}}">
+              <li>Job Seekers</li>
+            </a>
+            <a href="{{pathFor route='Vacancies_List'}}"><li>Vacancies</li></a>
+            <a href="{{pathFor route='AboutUs'}}"><li>About Us</li></a>
+            <a href="{{pathFor route='ContactUs'}}"><li>Contact</li></a>
+            {{#if isInRole 'admin'}}
+              <a href="{{pathFor route='Admin_Home'}}"><li style="color:red;">Admin</li></a>
+            {{/if}}
+          </ul>
+        </div>
       </header>
       <div class="yield-wrapper">
         {{> yield}}
@@ -45,10 +40,10 @@
       <div style="position:relative;">
         <div class="social" align="right">
           <ul>
-            <li><a href="#"><img src="style/images/icon-linkedin.png" alt=""></a></li>
-            <li><a href="#"><img src="style/images/icon-twitter.png" alt=""></a></li>
-            <li><a href="#"><img src="style/images/icon-facebook.png" alt=""></a></li>
-            <li><a href="#"><img src="style/images/icon-google.png" alt=""></a></li>
+            <li><a href="#"><img src="/style/images/icon-linkedin.png" alt=""></a></li>
+            <li><a href="#"><img src="/style/images/icon-twitter.png" alt=""></a></li>
+            <li><a href="#"><img src="/style/images/icon-facebook.png" alt=""></a></li>
+            <li><a href="#"><img src="/style/images/icon-google.png" alt=""></a></li>
           </ul>
         </div>
         <nav id="access" class="access" role="navigation" style="position:relative;">
