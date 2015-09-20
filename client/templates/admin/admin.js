@@ -25,6 +25,7 @@ Template.Admin_Home.helpers({
 // USERS
 Template.Admin_Users.created = function() {
 	Session.set('admin-search', '');
+    Session.set('contract-months', 3);
 };
 Template.Admin_Users.helpers({
 	results: function() {
@@ -37,9 +38,29 @@ Template.Admin_Users.helpers({
 		Meteor.subscribe('search_users', selector, limit);
 		// Fetch users
 		return Meteor.users.find(selector).fetch();
-	}
+	},
+    contracts: function() {
+        var months = parseInt(Session.get('contract-months'));
+        // Get contracts which expire within 3 months time
+        var date = new Date(); date.setMonth(date.getMonth() + months);
+        var selector = {
+            $and: [
+                {'profile.status': 'placed'},
+                {'profile.progress.deployment.end': {$lt: date}},
+                {'profile.progress.deployment.end': {$gt: new Date()}}
+            ]
+        };
+        var options = {sort: {'profile.progress.deployment.end': 1}};
+        Meteor.subscribe('users', selector, options);
+        return Meteor.users.find(selector, options).fetch();
+    },
+    months: function() { return Session.get("contract-months"); }
 });
 Template.Admin_Users.events({
+    // Used to change the contract expiry date
+    "blur .js-months, change .js-months": function(e,t) {
+        Session.set('contract-months', t.find('.js-months').value);
+    },
 	// Generates a new admin, first name/surname/email is required.
     // A password will be generated.
     "click .js-generate-admin": function(e, t) {
@@ -71,7 +92,27 @@ Template.Admin_Users.events({
         Session.set('admin-search', text);
     }, 200)
 });
-	//Admin_Users > AdministrationListItem
+    // Admin_Users > contractUserItem
+    Template.contractUserItem.helpers({
+        timeRemaining: function() {
+            var dateFuture = this.profile.progress.deployment.end; var dateNow = new Date();
+            if (dateFuture < dateNow) { return false; }
+            var seconds = Math.floor((dateFuture - (dateNow))/1000);
+            var minutes = Math.floor(seconds/60);   
+            var hours = Math.floor(minutes/60);
+            var days = Math.floor(hours/24);
+            var months = Math.floor(days/30);
+            hours = hours-(days*24);
+            days = days - (months * 30);
+            var day_suffix = " day";
+            if (days > 1 || days < 1) { day_suffix += "s"; }
+            var month_suffix = " month";
+            if (months > 1 || months < 1) { month_suffix += "s"; }
+            return months + month_suffix + ", " + days + day_suffix;
+        },
+        date: function() { return this.profile.progress.deployment.start.format("dd/mm") + " - " + this.profile.progress.deployment.end.format("dd/mm/yyyy"); }
+    });
+	// Admin_Users > AdministrationListItem
 	Template.administrationListItem.helpers({
 		email: function() {
 			return this.emails[0].address;

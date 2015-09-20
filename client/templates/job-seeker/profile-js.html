@@ -149,6 +149,22 @@
 							{{> input seed='bvf' value=profile.progress.comment session='progress-comment' type='textarea' placeholder='Add Something Extra' limit=120}}
 						</div>
 					</div>
+					<!-- If placed, add option for deployment period -->
+					{{#if isBeingPlaced}}
+						<div class="content">
+							<h5 class="content-header">Deployment Period</h5>
+							<div class="content">
+								{{> input seed='bvf' value=profile.progress.deployment.start type='date' session='deploy-start' label='Start Date'}}
+								{{> input seed='bvf' value=profile.progress.deployment.end type='date' session='deploy-end' label='End Date'}}
+							</div>
+						</div>
+						<div class="content">
+							<h5 class="content-header">Place of Employment</h5>
+							<div class="content">
+								{{> input seed='bvf' value=profile.progress.deployment.place type='text' session='deploy-place' label='Company Name'}}
+							</div>
+						</div>
+					{{/if}}
 					<button class="js-save-admin">Save</button>
 					<button class="js-cancel">Cancel</button>
 				</div>

@@ -1,0 +1,20 @@
+<h1 style="text-align:center;font-family:'Arial';color:#ff7e00;border-bottom:1px solid lightgray;padding-bottom:8px;">
+	Job Seeker Contracts Expiring in the <i>next 3 months</i>
+</h1>
+{{#if contracts}}
+	{{#each contracts}}
+		<div style="padding:20px;border:1px solid lightgray;margin-bottom:5px;">
+			<strong>Firstname:</strong>&emsp; <span style="color:gray;">{{profile.personal_details.name}}</span> &emsp;&emsp;
+			<strong>Surname:</strong>&emsp; <span style="color:gray;">{{profile.personal_details.surname}}</span> <br />
+			<strong>Contact:</strong>&emsp; <span style="color:gray;"><strong>(T):</strong> {{profile.personal_details.tel_number}}&emsp; <strong>(C):</strong> {{profile.personal_details.cell_number}}</span> <br /><br />
+			<strong>Place of Employment:</strong> &emsp; <span style="color:gray;">{{profile.progress.deployment.place}}</span><br /><br />
+			&emsp; <span style="color:gray;">({{profile.progress.deployment.start}} - {{profile.progress.deployment.end}})</span> <br /><br />
+			<a href="http://www.toadit.com/profile/{{_id}}" target="_blank" style="color:#ff7e00;">View profile on ToadIT.com</a>
+		</div>
+	{{/each}}
+{{else}}
+	<i style="padding:20px;"><strong>There are no contracts expiring within 3 months</strong></i>
+{{/if}}
+<div style="padding:15px;font-size:16px;text-align:center;">
+	<a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/contact-us">Contact Us</a>  &bull;  <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/about-us">About Us</a>  &bull; <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/">Home</a>
+</div>

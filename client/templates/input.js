@@ -1,3 +1,10 @@
+Template.input.rendered = function() {
+	if (this.data.type == "date") {
+		$('#datepicker' + this.data.session).datepicker({
+	    	todayHighlight: true
+	    });
+    }
+};
 Template.input.created = function() {
 	// Set session variables for CV Input
 	/*Session.set('change-cv-input', false);
@@ -45,6 +52,14 @@ Template.input.helpers({
 	toBeRemoved: function() { return Session.get('remove-cv'); }
 });
 Template.input.events({
+	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
+	// _+_+_+_+_+_DATE_+_+_+_+_+_+_
+	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
+	// Used to set the value of a date
+	"change .js-date": function(e, t) {
+		var date = new Date(t.find(".js-date").value);
+		Session.set(this.session, date);
+	},
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
 	// _+_+_+_+_+INPUT_+_+_+_+_+_+_
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
@@ -138,7 +153,7 @@ Template.input.events({
 	// input > inputDropdownOption
 	Template.inputDropdownOption.events({
 		// Used to select a new option from the dropdown
-	    "mousedown .js-input-option": function(e, t) {
+	    "mousedown .js-input-option, click .js-input-option": function(e, t) {
 			Session.set(Template.parentData(1).session, this.toString());
 	    }
 	});

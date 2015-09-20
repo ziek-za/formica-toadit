@@ -90,5 +90,33 @@ Meteor.methods({
 			subject: "ToadIT - Contact Us Form Submission",
 			html: html
 		});
+	},
+	// Used to notify administration of users whom contracts are expiring
+	TASK_NotifyExpiringContracts: function() {
+		console.log("Sending 'contract expiry' email");
+		// Get contracts details
+        // Get contracts which expire within 3 months time
+        var date = new Date(); date.setMonth(date.getMonth() + 3);
+        var selector = {
+            $and: [
+                {'profile.status': 'placed'},
+                {'profile.progress.deployment.end': {$lt: date}},
+                {'profile.progress.deployment.end': {$gt: new Date()}}
+            ]
+        };
+        var options = {sort: {'profile.progress.deployment.end': 1}};
+        var contracts = Meteor.users.find(selector, options).fetch();
+		// Get HTML template to send
+		SSR.compileTemplate('Email_ExpringContracts', Assets.getText('expiring-contracts.html'));
+		var html = SSR.render('Email_ExpringContracts', {
+			contracts: contracts
+		});
+		// Send email
+		Email.send({
+			from: "no-reply@toadit.com",
+			to: "contacts@toadit.com",
+			subject: "ToadIT - Expiring Contracts",
+			html: html
+		})
 	}
  });

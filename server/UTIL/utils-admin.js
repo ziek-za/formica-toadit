@@ -24,12 +24,22 @@ Meteor.methods({
 		Meteor.call("EMAIL_AdminAccountCreationVerification", id, email, password);
 	},
 	// Change profile details for a job seeker
-	UTIL_EditAdminSpecificDetailsJS: function(userId, targetUserId, comment, status) {
+	UTIL_EditAdminSpecificDetailsJS: function(targetUserId, edit_object) {
 		// Authorization
+		var userId = Meteor.userId();
 		Meteor.call("AUTH_IsAdmin", userId);
+		if (edit_object.status == "placed") {
+			// Update deplyoment details
+			Meteor.users.update({'_id':targetUserId}, {$set: {
+					'profile.progress.deployment.start':edit_object.deployment.start,
+					'profile.progress.deployment.end':edit_object.deployment.end,
+					'profile.progress.deployment.place':edit_object.deployment.place
+				}
+			});
+		}
 		Meteor.users.update({'_id':targetUserId}, {$set: {
-				'profile.status':status,
-				'profile.progress.comment':comment,
+				'profile.status':edit_object.status,
+				'profile.progress.comment':edit_object.comment,
 				'profile.progress.assigned': {'_id': userId }
 			}
 		});

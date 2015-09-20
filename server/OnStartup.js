@@ -25,4 +25,20 @@ Meteor.startup(function() {
 		Roles.addUsersToRoles(id, ['admin', 'root']);
 		console.log("[Successfully created root user]");
 	}
+	// Start timed events
+	SyncedCron.config({
+	    // Log job run details to console
+	    log: false,
+
+	    // Use a custom logger function (defaults to Meteor's logging package)
+	    logger: null,
+
+	    // Name of collection to use for synchronisation and logging
+	    collectionName: 'cronHistory',
+
+	    // Default to using localTime
+	    utc: false,
+	    collectionTTL: 172800
+	  });
+	SyncedCron.start();
 });

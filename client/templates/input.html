@@ -17,6 +17,12 @@
 				{{/each}}
 			</select>
 		{{/if}}
+		{{#if equals type 'date'}}
+			<div class="input-daterange input-group tournament-signup-closing" id="datepicker{{session}}">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				<input placeholder="Click for Calendar" type="text" value="{{value}}" class="form-control js-date" />
+			</div>
+		{{/if}}
 		{{#if equalsor2 type 'rand' 'contactNumber'}}
 			<span class="input-number-prefix">
 				{{#if equals type 'contactNumber'}}+27{{/if}}

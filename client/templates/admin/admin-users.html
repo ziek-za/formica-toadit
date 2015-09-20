@@ -5,6 +5,28 @@
 		</div>
 		<div class="admin-section">
 			<div class="title">
+				<h4>Job Seeker Deployment Contracts</h4>
+			</div>
+			<div class="content">
+				<input value="{{months}}" placeholder="Number of months" type="number" class="js-months" />
+				<h5>Expring in {{months}} month period:</h5>
+				<div class="indent">
+					{{#if contracts}}
+						<ul>
+							{{#each contracts}}
+								<li>{{> contractUserItem}}</li>
+							{{/each}}
+						</ul>
+					{{else}}
+						<div class="indent">
+							<i>No contracts expiring.</i>
+						</div>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+		<!--<div class="admin-section">
+			<div class="title">
 				<h4>Latest Users Registered</h4>
 			</div>
 			<div class="content">
@@ -25,7 +47,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 		<div class="admin-section">
 			<div class="title">
 				<h4>Manage Administration Staff</h4>
@@ -72,6 +94,10 @@
 		</div>
 	</div>
 </template>
+	<!-- Used for listing expiring contracts -->
+	<template name="contractUserItem">
+		<a href="{{pathFor route='Profile' _id=_id}}" target="_blank">{{profile.personal_details.name}} {{profile.personal_details.surname}}</a> - {{timeRemaining}} <span style="color:gray;">({{date}})</span>
+	</template>
 	<!-- Used for listing administration members -->
 	<template name="administrationListItem">
 		<tr>

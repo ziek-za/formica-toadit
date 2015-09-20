@@ -17,14 +17,16 @@
                 ">
               <li>Employers</li>
             </a>
-            <a href="
-                {{#if currentUser}}
-                  {{pathFor route='Search' query='type=job-seeker'}}
-                {{else}}
-                  {{pathFor route='Login' _portal='job-seeker'}}
-                {{/if}}">
-              <li>Job Seekers</li>
-            </a>
+            {{#if isInRole 'admin'}}
+              <a href="
+                  {{#if currentUser}}
+                    {{pathFor route='Search' query='type=job-seeker'}}
+                  {{else}}
+                    {{pathFor route='Login' _portal='job-seeker'}}
+                  {{/if}}">
+                <li>Job Seekers</li>
+              </a>
+            {{/if}}
             <a href="{{pathFor route='Vacancies_List'}}"><li>Vacancies</li></a>
             <a href="{{pathFor route='AboutUs'}}"><li>About Us</li></a>
             <a href="{{pathFor route='ContactUs'}}"><li>Contact</li></a>

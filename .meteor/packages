@@ -32,3 +32,5 @@ dburles:google-maps
 email
 # For date picking
 rajit:bootstrap3-datepicker
+# For timed tasks
+percolate:synced-cron

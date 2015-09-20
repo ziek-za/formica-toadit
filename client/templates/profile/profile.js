@@ -207,6 +207,8 @@ Template.Profile.helpers({
  		Session.set('cv-error', false);
  	};
  	Template.Profile_JS_Edit.helpers({
+ 		// admin controls
+ 		isBeingPlaced: function() { return (Session.get('account-state') == "placed"); },
  		toBeRemoved: function() {
  			return Session.get('remove-cv');
  		},
@@ -233,12 +235,18 @@ Template.Profile.helpers({
  		"click .js-save-admin": function(e, t) {
  			// Verify input
  			if (!Input_check_errors('bvf')) { return; }
- 			var comment = Session.get('progress-comment');
- 			var status = Session.get('account-state');
- 			console.log(status);
- 			var userId = Meteor.userId(); var targetUserId = this._id;
+ 			var admin_edit_details = {
+ 				'comment': Session.get('progress-comment'),
+ 				'status': Session.get('account-state'),
+ 				'deployment': {
+ 					'start': Session.get('deploy-start'),
+ 					'end': Session.get('deploy-end'),
+ 					'place': Session.get('deploy-place')
+ 				}
+ 			};
+ 			var targetUserId = this._id;
  			// Update admin specific details
- 			Meteor.call("UTIL_EditAdminSpecificDetailsJS", userId, targetUserId, comment, status, function(err) {
+ 			Meteor.call("UTIL_EditAdminSpecificDetailsJS", targetUserId, admin_edit_details, function(err) {
  				if (err) {
  					Notify("Error with saving Job Seeker admin specific details: " + err.error, "fail");
  				} else {
