@@ -67,7 +67,7 @@ form.contact-form {
 			width:80%;
 			text-align:left;
 		}
-		.close {
+		.notification-close {
 			width:10%;
 			cursor:pointer;
 		}
@@ -309,7 +309,7 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 // REGISTRATION CONFIRMATION
 .reg-verify-wrapper.overlay { position:absolute; left:0; right:0;} 
 .reg-verify-wrapper {
-	width:60%;
+	width:950px;
 	background-color:white;
 	padding:20px;
 	text-align:center;
@@ -455,28 +455,61 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 		font-weight:bold;
 		margin-right:8px;
 	}
+	.progress-bar-wrapper {
+		margin-bottom:10px;
+		.progress-bar-step {
+			width:25%; height:36px; display:inline-block;
+			vertical-align:middle;
+			color:white;
+			line-height:24px;
+			div {
+				width:120%;
+				padding:5px 6px;
+				background-color:rgba(114, 158, 114, 1);
+				border-top-left-radius: 15px;
+				border-bottom-left-radius: 15px;
+				box-shadow: -2px 0px 0px #FFF;
+				span {
+					background-color:white;
+					border-radius:24px;
+					color:rgba(114, 158, 114, 1);
+					padding: 0 5px;
+					margin-right: 8px;
+				}
+			}
+			div.inactive { background-color:lightgray; color:gray; span { background-color:gray; color: lightgray; }}
+			div.last-bar { width:100% !important; }
+		}
+		.progress-bar-step.active {}
+	}
 	.progress-wrapper {
 		margin:0 auto;
 		background: rgba(128, 128, 128, 0.18);
 		border-bottom: 1px solid rgba(216, 212, 212, 1);
-		margin-bottom: 15px;
+		margin-bottom: 8px;
 		padding: 10px 0px 0px 10px !important;
-		.progress-ico:hover .details { opacity:1; }
+		.progress-header { h4 { color:darkgray !important; margin:0px; padding:0px; } text-shadow:1px 1px 0 rgba(0,0,0,0.1); }
+		.progress-ico:hover { .details { opacity:1; }}
 		.progress-ico.verified { margin-left:0 !important; }
 		.progress-ico {
+			border-bottom: 1px solid rgba(216, 212, 212, 1);
 			width:24%;
 			margin:0.5%;
-			padding-top:22%;
+			padding-top:10%;
 			display:inline-block;
-			background-color:rgba(114, 158, 114, 1);
-			background-size:cover;
+			//background-color:rgba(114, 158, 114, 1);
+			//border:1px solid gray;
+			background-color:gray;
+			background-size:contain;
+			background-position:center;
+			background-repeat:no-repeat;
 			position:relative;
 			.details, .verified { position:absolute; }
 			.verified {
-				color:white;
+				color:rgba(114, 158, 114, 1);
 				text-shadow:1px 2px 2px rgba(0,0,0,0.4);
-				font-size:24px;;
-				right:10px;top:10px;
+				font-size:34px;;
+				right:-10px;top:-15px;
 			}
 			.details {
 				opacity:0;
@@ -485,12 +518,14 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 				padding:8px 0 12px 0;
 				background-color:rgba(0,0,0,0.4);
 				color:rgba(255,255,255,0.8);
-				.title {
+				/*.title {
+					font-weight:bold;
 					padding:0 8px;
 					font-size:17px;
 					line-height:17px;
 					margin-bottom:8px;
-				}
+				}*/
+				.title { display:none; }
 				.sub-title {
 					padding-left:15px;
 					padding-right:8px;
@@ -528,6 +563,7 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 				border:8px solid white;
 				border-radius:8px;
 				box-shadow:4px 4px 4px rgba(0,0,0,0.2);
+				background-color:lightgray;
 				.profile-control {
 					text-shadow:2px 2px 3px rgba(0,0,0,0.3);
 					position:absolute;
@@ -569,6 +605,14 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 			.profile-body {
 				padding:15px 10px;
 				min-height:450px;
+				.profile-page-alert {
+					border:1px solid @error-colour;
+					color: @error-colour;
+					background-color:@error-colour-faded;
+					padding:10px 20px;
+					margin-bottom:15px;
+					text-align:center;
+				}
 			}
 		}
 	}
@@ -711,20 +755,34 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
+					vertical-align:middle;
 				}
 				tr.job-seeker {
 					td:nth-child(1),
-					th:nth-child(1) { width:32%; }
+					th:nth-child(1) { width:50px; }
+					td:nth-child(1) {
+						 vertical-align:center;
+						.profile-picture-thumbnail {
+							background-size:cover;
+							background-position:center;
+							width:50px;height:50px;
+							background-color:lightgray;
+						}
+					}
 					td:nth-child(2),
-					th:nth-child(2) { width:10%; }
+					th:nth-child(2) { width:25%; }
 					td:nth-child(3),
 					th:nth-child(3) { width:10%; }
 					td:nth-child(4),
 					th:nth-child(4) { width:10%; }
 					td:nth-child(5),
-					th:nth-child(5) { width:13%; }
+					th:nth-child(5) { width:10%; }
 					td:nth-child(6),
-					th:nth-child(6) { width:25%; }
+					th:nth-child(6) { width:15%; }
+					td:nth-child(7),
+					th:nth-child(7) { width:18%; }
+					td:nth-child(8),
+					th:nth-child(8) { width:18%; }
 				}
 				tr.employer {
 					td:nth-child(1),
@@ -758,7 +816,7 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 					}
 				}
 				.search-result-row {
-					cursor:pointer;
+					//cursor:pointer;
 					.listing-symbol {
 						margin-right:8px;
 					}
@@ -886,7 +944,7 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 	background-color:rgba(240, 240, 240, 1);
 	padding:5px;width:250px;
 	.vacancy-item-header {
-		font-size:13px; line-height:14px; color:rgba(156, 156, 156, 1) !important; font-weight:bold;
+		font-size:13px; line-height:14px; color:rgba(156, 156, 156, 1) !important;
 	}
 	.vacancy-item-description {
 		font-size:13px; line-height:15px;

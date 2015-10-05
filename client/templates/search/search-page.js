@@ -1,6 +1,5 @@
 Template.Search.created = function() {
 	Session.set('limit', 15);
-	Session.set('start', 0);
 	Session.set('page', 1);
 	Session.set('ready', false);
 	Session.set('total', false);
@@ -19,7 +18,8 @@ Template.Search.helpers({
 	},
 	results: function() {
 		var limit = Session.get('limit');
-		var start = Session.get('start');
+		var page = Session.get('page');
+		var start = (page - 1) * limit;
 		// Get session search variables
 		var search = Session.get('search');
 		var search_type = Session.get('searchType');
@@ -34,35 +34,19 @@ Template.Search.helpers({
 		var total = results.count(); Session.set('total', total);
 		return results.fetch();
 	},
-	page: function() {
-		return Session.get('page');
-	},
-	ready: function() {
-		return Session.get('ready');
-	},
-	total: function() {
-		return Session.get('total');
-	}
+	page: function() { return Session.get('page'); },
+	ready: function() { return Session.get('ready'); },
+	total: function() { return Session.get('total'); }
 });
 Template.Search.events({
 	"click .js-page-right": function(e, t) {
-		var limit = Session.get('limit');
-		// Set start
-		var start = Session.get('start');
-		start += limit;
 		var page = Session.get('page') + 1;
 		Session.set('page', page);
-		Session.set('start', start);
 	},
 	"click .js-page-left": function(e, t) {
-		var limit = Session.get('limit');
-		// Set start
-		var start = Session.get('start');
-		start -= limit;
 		var page = Session.get('page') - 1;
-		if (start < 0) { start = 0; }
-		else { Session.set('page', page); }
-		Session.set('start', start);
+		if (page < 2) { page = 1; }
+		Session.set('page', page);
 	}
 });
 
@@ -83,12 +67,10 @@ Template.Search.events({
 // SPECIFIC SEARCHES
 	// JOB SEEKER
 	Template.SearchFields_JS.helpers({
-		provinces: function() {
-			return PROVINCES();
-		},
-		positions: function() {
-			return JOBS();
-		}
+		provinces: function() { return PROVINCES(); },
+		positions: function() { return JOBS(); },
+		sapModules: function() { return SAP_MODULES; },
+		industries: function() { return INDUSTRIES; }
 	});
 	Template.SearchFields_JS.events({
 		"submit": function(e, t)  {
@@ -108,7 +90,10 @@ Template.Search.events({
 			search.ideal_salary.to = AssignTo(parseInt(Session.get('desired-low')));
 			// Province
 			search.province = Session.get('search-province');
+			// Roles requirements
 			search.position.desired = Session.get('search-desired-position');
+			search.sap_module = Session.get('search-sap-module');
+			search.industry = Session.get('search-industry');
 			// Type
 			search.type.active = Session.get('set-active');
 			search.type.pending = Session.get('set-pending');

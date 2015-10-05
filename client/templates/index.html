@@ -17,15 +17,13 @@
                 ">
               <li>Employers</li>
             </a>
-            {{#if isInRole 'admin'}}
-              <a href="
-                  {{#if currentUser}}
-                    {{pathFor route='Search' query='type=job-seeker'}}
-                  {{else}}
-                    {{pathFor route='Login' _portal='job-seeker'}}
-                  {{/if}}">
-                <li>Job Seekers</li>
-              </a>
+            <!-- Check if the user is logged in -->
+            {{#if currentUser}}
+              {{#if isInRole 'admin'}}
+                <a href="{{pathFor route='Search' query='type=job-seeker'}}"><li>Job Seekers</li></a>
+              {{/if}}
+            {{else}}
+              <a href="{{pathFor route='Login' _portal='job-seeker'}}">Job Seekers</a>
             {{/if}}
             <a href="{{pathFor route='Vacancies_List'}}"><li>Vacancies</li></a>
             <a href="{{pathFor route='AboutUs'}}"><li>About Us</li></a>
@@ -86,7 +84,7 @@
       {{/if}}
     </div><!--
     --><div class="message">{{{msg}}}</div><!--
-    --><div class="close"><i class="js-remove-notification glyphicon glyphicon-remove"></i></div><!--
+    --><div class="notification-close"><i class="js-remove-notification glyphicon glyphicon-remove"></i></div><!--
   --></div>
 </template>
 

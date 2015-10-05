@@ -3,5 +3,5 @@ Template.Registration_Conf.helpers({
 });
 
 Template.Registration_Verification.helpers({
-	complete: function() { return this.emails[0].verified; }
+	complete: function() { if(this.emails) { return this.emails[0].verified; } else { return false; }}
 });

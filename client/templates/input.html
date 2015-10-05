@@ -11,7 +11,7 @@
 			<input class="{{#if display_error}}error {{/if}}input-template-field js-input-template" placeholder="{{placeholder}}" type="{{#if equals type 'password'}}password{{else}}text{{/if}}" />
 		{{/if}}
 		{{#if equals type 'dropdown'}}
-			<select>
+			<select class="js-dropdown-select">
 				{{#each data}}
 					{{> inputDropdownOption}}
 				{{/each}}

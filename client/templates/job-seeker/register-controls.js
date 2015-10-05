@@ -4,8 +4,11 @@ Template.Register_JS.created = function() {
 	Session.set('processing', false);
 };
 Template.Register_JS.helpers({
+	// used for combobox's
 	provinces: function() { return PROVINCES(); },
 	positions: function() { return JOBS(); },
+	industries: function() { return INDUSTRIES},
+	sapModules: function() { return SAP_MODULES; },
 	cvError: function() { return Session.get('cv-error'); },
 	passwordError: function() { return Session.get('password-error'); },
 	errors: function() { return Session.get('xfxinput-error'); },
@@ -18,11 +21,11 @@ Template.Register_JS.events({
 			var ie = false;
 			if (!Input_check_errors('xfx')) { ie = true; }
 			// Check to see that a CV has been attached
-			if (_.isUndefined(t.find('.js-cv-input').files[0])) {
+			/*if (_.isUndefined(t.find('.js-cv-input').files[0])) {
 				Session.set('xfxinput-error', true);
 				Session.set('cv-error', 'A CV is required to complete the registration process.');
 				ie = true;
-			}
+			}*/
 		// --------
 		var job_seeker = {
 			'personal_details': {},
@@ -41,7 +44,7 @@ Template.Register_JS.events({
 		// verify password input
 			if (password_1 != password_2) { Session.set('password-error', 'The provided passwords do not match.'); ie = true; }
 		// --------
-		if (ie) { return; }
+		//if (ie) { return; }
 		// PERSONAL DETAILS
 		job_seeker.personal_details.name = Session.get('reg-name');
 		job_seeker.personal_details.surname = Session.get('reg-surname');
@@ -56,15 +59,19 @@ Template.Register_JS.events({
 		// ROLE REQUIREMENTS
 		job_seeker.role_requirements.current_job = Session.get('reg-current-job');
 		job_seeker.role_requirements.desired_job = Session.get('reg-desired-job');
+		job_seeker.role_requirements.sap_module = Session.get('reg-sap-module');
+		job_seeker.role_requirements.industry = Session.get('reg-industry');
 		// Create Job Seeker
 		var portal = this.key;
-		var cv = new FS.File(t.find('.js-cv-input').files[0]);
+		var file = t.find('.js-cv-input').files[0];
+		var cv = new FS.File(file); var containsCV = false;
+		if (file) { containsCV = true; }
 		// Set 'processing' to true
 		Session.set('processing', true);
 		Meteor.call("UTIL_CreateNewJobSeeker", job_seeker, email, password_1, function(err, jobSeekerId) {
 			if (err) {
-				console.log("Job seeker register error: " + err.error);
-			} else if (jobSeekerId) {
+				Notify("Job seeker register error: " + err.error, "fail");
+			} else if (jobSeekerId && containsCV) {
 				cv.metadata = {
 					'uploadUserId': jobSeekerId,
 					'targetUserId': jobSeekerId
@@ -76,6 +83,8 @@ Template.Register_JS.events({
 						});
 					}
 				});
+			} else if (jobSeekerId) {
+				Router.go('Login', {_portal: portal}, {query: 'registrationSuccess=true'});
 			}
 		});
 		return false;

@@ -17,12 +17,14 @@
 						<thead>
 							{{#if searchingForJobSeeker}}
 								<tr class="job-seeker">
+									<th></th>
 									<th>Name</th>
 									<th>Current</th>
 									<th>Ideal</th>
 									<th>Move-for</th>
 									<th>Province</th>
-									<th>Ideal Position</th>
+									<th>SAP Module</th>
+									<th>Industry</th>
 								</tr>	
 							{{else}}
 								<tr class="employer">
@@ -70,19 +72,24 @@
 </template>
 
 	<template name="SearchDisplay_JS">
-		<tr class="js-view-profile search-result-row job-seeker">
+		<tr class="search-result-row job-seeker">
+			<td>
+				<div class="profile-picture-thumbnail" style="background-image:url('{{profile.picture.regular}}');"></div>
+			</td>
 			<!-- First name -->
 			<td>
-				{{#if equals profile.status 'active'}}
-					<i class="glyphicon glyphicon-user listing-symbol" style="color:green;"></i>
-				{{/if}}
-				{{#if equals profile.status 'pending'}}
-					<i class="glyphicon glyphicon-user listing-symbol" style="color:orange;"></i>
-				{{/if}}
-				{{#if equals profile.status 'placed'}}
-					<i class="glyphicon glyphicon-user listing-symbol" style="color:gray;"></i>
-				{{/if}}
-				{{profile.personal_details.name}} {{profile.personal_details.surname}}
+				<a href="{{pathFor route='Profile' _id=_id}}">
+					{{#if equals profile.status 'active'}}
+						<i class="glyphicon glyphicon-user listing-symbol" style="color:green;"></i>
+					{{/if}}
+					{{#if equals profile.status 'pending'}}
+						<i class="glyphicon glyphicon-user listing-symbol" style="color:orange;"></i>
+					{{/if}}
+					{{#if equals profile.status 'placed'}}
+						<i class="glyphicon glyphicon-user listing-symbol" style="color:gray;"></i>
+					{{/if}}
+					{{profile.personal_details.name}} {{profile.personal_details.surname}}
+				</a>
 			</td>
 			<!-- Current Salary -->
 			<td>R {{profile.salary_details.current}}</td>
@@ -92,19 +99,18 @@
 			<td>R {{profile.salary_details.ideal}}</td>
 			<!-- Province -->
 			<td>{{profile.personal_details.province}}</td>
-			<!-- Ideal position -->
-			<td>{{profile.role_requirements.desired_job}}</td>
-			<!--{{#if isInRole 'admin'}}
-				<td>
-					{{profile.status}}
-				</td>
-			{{/if}}-->
+			<!-- SAP Module -->
+			<td>{{profile.role_requirements.sap_module}}</td>
+			<!-- Industry -->
+			<td>{{profile.role_requirements.industry}}</td>
 		</tr>
 	</template>
 
 	<template name="SearchDisplay_Emp">
-		<tr class="js-view-profile search-result-row employer">
-			<td>{{profile.company_details.name}}</td>
+		<tr class="search-result-row employer">
+			<a href="{{pathFor route='Profile' _id=_id}}">
+				<td>{{profile.company_details.name}}</td>
+			</a>
 			<td>{{profile.company_details.province}}</td>
 			<td>+27 {{profile.company_details.tel_number}}</td>
 		</tr>
@@ -138,25 +144,36 @@
 					<div><strong>Province</strong></div>
 					{{> input seed='gbg' placeholder='Enter a Province' value='' type='combobox' session='search-province' data=provinces}}
 				</div>
+				<!-- Desired Position -->
 				<div class="combobox-search">
 					<div><strong>Desired Position</strong></div>
 					{{> input seed='gbg' placeholder='Enter a Position' value='' type='combobox-other' session='search-desired-position' data=positions}}
 				</div>
+				<!-- SAP Module -->
+				<div class="combobox-search">
+					<div><strong>SAP Module</strong></div>
+					{{> input seed='gbg' placeholder='Enter a Module' value='' type='combobox' session='search-sap-module' data=sapModules}}
+				</div>
+				<!-- Industry -->
+				<div class="combobox-search">
+					<div><strong>Industry</strong></div>
+					{{> input seed='gbg' placeholder='Enter an Industry' value='' type='combobox-other' session='search-industry' data=industries}}
+				</div>
 				<!-- Current Salary -->
 				<div class="to-from"><!--
-					--><div><strong>Current Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					--><div><strong>Current Salary <span style="color:gray;float:right;font-size:12px;">(Monthly Salary)</span></strong></div><!--
 					-->{{> input seed='gbg' placeholder='From' type='rand' session='current-high' limit=12}}<!--
 					-->{{> input seed='gbg' placeholder='To' type='rand' session='current-low' limit=12}}<!--
 				--></div>
 				<!-- MoveFor Salary -->
 				<div class="to-from"><!--
-					--><div><strong>Move-for Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					--><div><strong>Move-for Salary <span style="color:gray;float:right;font-size:12px;">(Monthly Salary)</span></strong></div><!--
 					-->{{> input seed='gbg' placeholder='From' type='rand' session='movefor-high' limit=12}}<!--
 					-->{{> input seed='gbg' placeholder='To' type='rand' session='movefor-low' limit=12}}<!--
 				--></div>
 				<!-- Ideal Salary -->
 				<div class="to-from"><!--
-					--><div><strong>Desired Salary <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></strong></div><!--
+					--><div><strong>Desired Salary <span style="color:gray;float:right;font-size:12px;">(Monthly Salary)</span></strong></div><!--
 					-->{{> input seed='gbg' placeholder='From' type='rand' session='desired-high' limit=12}}<!--
 					-->{{> input seed='gbg' placeholder='To' type='rand' session='desired-low' limit=12}}<!--
 				--></div>

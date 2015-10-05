@@ -26,27 +26,12 @@
 <!-- Home Page Vacancy Item -->
 <template name="homepageVacancyItem">
 	<div class="homepage-vacancy-item-wrapper">
-		{{#if vacancy.link}}
-			<a href="{{vacancy.link}}" target="_blank">
-				<div class="vacancy-item-header">
-					{{#if vacancy.link}}
-						<a href="{{vacancy.link}}" target="_blank">{{vacancy.title}}</a>
-					{{else}}
-						{{vacancy.title}}
-					{{/if}}
-				</div>
-				<div class="vacancy-item-description">{{vacancy.description}}</div>
-			</a>
-		{{else}}
+		<a href="{{vacancy.link}}" target="_blank">
 			<div class="vacancy-item-header">
-				{{#if vacancy.link}}
-					<a href="{{vacancy.link}}" target="_blank">{{vacancy.title}}</a>
-				{{else}}
-					{{vacancy.title}}
-				{{/if}}
+				<a href="{{vacancy.link}}" target="_blank">{{vacancy.title}}</a>
 			</div>
-			<div class="vacancy-item-description">{{vacancy.description}}</div>
-		{{/if}}
+			<strong><div class="vacancy-item-description">{{vacancy.description}}</div></strong>
+		</a>
 	</div>
 	<div class="vacancy-item-date">Published {{formattedDate}}</div>
 </template>

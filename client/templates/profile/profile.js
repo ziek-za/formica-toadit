@@ -96,11 +96,13 @@ Template.Profile.helpers({
 				}
 			}
 			return true;
-		}
+		},
+		primaryEmail: function() { return this.emails[0].address; }
 	});
  	Template.Profile_Emp.events({});
 	// Profile > Profile_JS
 	Template.Profile_JS.helpers({
+		primaryEmail: function() { return this.emails[0].address; },
 		canEdit: function() {
 			var targetUserId = this._id;
 			var userId = Meteor.userId();
@@ -205,6 +207,7 @@ Template.Profile.helpers({
  		Session.set('change-cv-input', false);
  		Session.set('remove-cv', false);
  		Session.set('cv-error', false);
+ 		Session.set('saving', false);
  	};
  	Template.Profile_JS_Edit.helpers({
  		// admin controls
@@ -215,6 +218,8 @@ Template.Profile.helpers({
  		// arrays used for input fields
  		provinces: function() { return PROVINCES(); },
  		jobs: function() { return JOBS(); },
+ 		sapModules: function() { return SAP_MODULES; },
+ 		industries: function() { return INDUSTRIES; },
  		accountStates: function() { return CONST_JOBSEEKER_STATES; },
  		pageContainsError: function() { return Session.get('abcinput-error'); },
  		cvError: function() { return Session.get('cv-error'); },
@@ -223,7 +228,8 @@ Template.Profile.helpers({
  				return true;
  			}
  			return false;
- 		}
+ 		},
+ 		saving: function() { return Session.get('saving'); }
  	});
  	Template.Profile_JS_Edit.events({
  		// Global cancel
@@ -257,26 +263,28 @@ Template.Profile.helpers({
  		// Used to save out profile information/details
  		"click .js-save": function(e, t) {
  			// verify input
- 			if (!Input_check_errors('abc')) { return; }
+ 			var ie = false;
+ 			if (!Input_check_errors('abc')) { ie = true; }
  			// check to see not removing a CV w/o uploading a new one
- 			if (Session.get('remove-cv')) {
+ 			if (Session.get('remove-cv') ||
+ 				_.isUndefined(this.profile.cv)) {
  				if (_.isUndefined(t.find('.js-cv-input').files[0])) {
  					Session.set('abcinput-error', true);
- 					return;
+ 					Session.set('cv-error', 'A valid CV document is required.');
+ 					ie = true;
  				}
  			}
+ 			if (ie) { return; }
+ 			Session.set('saving', true);
  			// Continue if true
  			var userId = Meteor.userId();
  			var targetUserId = this._id;
- 			if (Session.get('change-image-input')) {
- 				// Image has been set to upload
- 				var profile_picture = t.find('.js-image-input').files;
- 				console.log(profile_picture);
- 			}
  			// Change of job
  			var role_requirements = {
  				'current_job': Session.get('current-job'),
- 				'desired_job': Session.get('desired-job')
+ 				'desired_job': Session.get('desired-job'),
+ 				'sap_module': Session.get('sap-module'),
+ 				'industry': Session.get('industry')
  			};
  			// Change of salary details
  			var salary_details = {
@@ -305,6 +313,20 @@ Template.Profile.helpers({
  					if (!err) {
  						Meteor.call("UTIL_AddCVUpload", userId, targetUserId, obj._id, obj.data.blob.name);
 // 						Sesson.set('change-cv-input', false);
+ 					}
+ 				});
+ 			}
+ 			//Uploading of an image
+ 			if (Session.get('change-image-input')) {
+ 				// Image has been set to upload
+ 				var img = new FS.File(t.find('.js-image-input').files[0]);
+ 				img.metadata = {
+ 					'uploadUserId': userId,
+ 					'targetUserId': targetUserId
+ 				}
+ 				Images.insert(img, function(err, obj) {
+ 					if (!err) {
+ 						Meteor.call("UTIL_AddImageUpload", userId, targetUserId, obj._id, obj.data.blob.name);
  					}
  				});
  			}
@@ -354,6 +376,11 @@ Template.Profile.helpers({
  			if (toBeRemoved) { toBeRemoved = false; Session.set('cv-error', false); Session.set('abcinput-error', false); }
  			else { toBeRemoved = {'_id':cv_id}; Session.set('cv-error', "If you are trying to replace your CV, you are <strong>required to upload a new one as well</strong>."); }
  			Session.set('remove-cv', toBeRemoved);
+ 		},
+ 		// Used to remove a profile picture and reset it to default
+ 		"click .js-remove-image": function(e,t) {
+ 			var img_id = this.profile.picture._id;
+			Images.remove(img_id);
  		}
  	});
 

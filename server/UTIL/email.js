@@ -111,7 +111,7 @@ Meteor.methods({
 		var html = SSR.render('Email_ExpringContracts', {
 			contracts: contracts
 		});
-		// Send email
+		// Send emailqu
 		Email.send({
 			from: "no-reply@toadit.com",
 			to: "contacts@toadit.com",

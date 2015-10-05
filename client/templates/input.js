@@ -84,7 +84,9 @@ Template.input.events({
 	"keyup .js-search-combobox": _.throttle(function(e, t) {
 	 	var text = t.find('.js-search-combobox').value;
 	 	if (this.type == "combobox-other") {
-    		if (validate_input(this, text, true)) { reset_errors(this.session, this.seed); } else {
+    		if (validate_input(this, text, true)) {
+    			reset_errors(this.session, this.seed);
+    		} else {
     			set_visibilty(this.session, false);
     			return;
 			}
@@ -113,7 +115,8 @@ Template.input.events({
 
 	    	value = Session.get(this.session);
 	    	if (_.isUndefined(value)) { value = ""; }
-	    	t.find('.js-search-combobox').value = value;
+	    	if (this.type != "combobox-other") { t.find('.js-search-combobox').value = value; }
+	    	else { value = t.find('.js-search-combobox').value; }
 	    	if (validate_input(this, value, true)) { reset_errors(this.session, this.seed); }
     	
     	set_visibilty(this.session, false);
@@ -141,6 +144,10 @@ Template.input.events({
 	"click .js-checkbox": function(e, t) {
 		var bool = t.find(".js-checkbox").checked;
 		Session.set(this.session, bool);
+	},
+	"change .js-dropdown-select": function(e, t) {
+		var value = e.target.value;
+    	Session.set(this.session, value);
 	}
 });
 	// input > inputComboboxOption
@@ -151,12 +158,12 @@ Template.input.events({
 	    }
 	});
 	// input > inputDropdownOption
-	Template.inputDropdownOption.events({
+	/*Template.inputDropdownOption.events({
 		// Used to select a new option from the dropdown
-	    "mousedown .js-input-option, click .js-input-option": function(e, t) {
+	    "mousedown .js-input-option, click .js-input-option, change .js-dropdown-select": function(e, t) {
 			Session.set(Template.parentData(1).session, this.toString());
 	    }
-	});
+	});*/
 	Template.inputDropdownOption.helpers({
 		selected: function() {
 			var value = Template.parentData(1).value;

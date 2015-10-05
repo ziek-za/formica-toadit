@@ -45,10 +45,12 @@
 					<div class="content">
 						{{> input seed='xfx' session='reg-current-job' label='Current Job' type='combobox-other' required=true data=positions}}
 						{{> input seed='xfx' session='reg-desired-job' label='Desired Job' type='combobox-other' required=true data=positions}}
+						{{> input seed='xfx' session='reg-sap-module' label='SAP Module' type='combobox' required=true data=sapModules}}
+						{{> input seed='xfx' session='reg-industry' label='Industry' type='combobox-other' required=true data=industries}}
 					</div>
 				</div>
 				<div class="section">
-					<h3>Curriculum Vitae</h3>
+					<h3>Curriculum Vitae<span style="color:gray;float:right;font-size:14px;">(Required but optional on registration)</span></h3>
 					<div class="content">
 						<div>
 							<input type="file" accept="application/pdf" class="js-cv-input" />

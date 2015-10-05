@@ -6,6 +6,9 @@ SearchSelector = function(search, type) {
 	// Based on the type, use a unique specifier
 	if (type == "job-seeker") {
 		var regexDesiredPos = sanitizeQueryForRegex(search.position.desired);
+		var industryRegex = sanitizeQueryForProvinceRegex(search.industry);
+		var sapModuleRegex = sanitizeQueryForProvinceRegex(search.sap_module);
+		console.log(sapModuleRegex + " " + industryRegex);
 		var typeArray = [];
 		if (search.type.active) { typeArray.push('active'); }
 		if (search.type.pending) { typeArray.push('pending'); }
@@ -18,6 +21,9 @@ SearchSelector = function(search, type) {
 	      		{'profile.personal_details.name': {$regex: regexQuery, $options: "ig"}},
 	      		{'profile.personal_details.surname': {$regex: regexQuery, $options: "ig"}}
 	      	]},
+	      	// Role requirements
+	      	{ 'profile.role_requirements.industry': {$regex: industryRegex, $options: "ig"}},
+	      	{ 'profile.role_requirements.sap_module': {$regex: sapModuleRegex, $options: "ig"}},
 	      	// Province
 	      	{ 'profile.personal_details.province': {$regex: regexProvince, $options: "ig"}},
 	      	// Position

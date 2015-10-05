@@ -11,14 +11,7 @@ Meteor.publish('users', function(selector, options) {
 Meteor.publish('profile', function(userId, currentUserId) {
 	// Check to see if the user is viewing their own
 	// profile
-	if (currentUserId == userId ||
-		Roles.userIsInRole(this.userId, 'admin')) {
-		 // Own profile
-		 return Meteor.users.find({'_id':userId});
-	} else {
-		// Viewing another persons profile/not logged in
-		return;
-	}
+	return Meteor.users.find({'_id':userId});
 });
 Meteor.publish('roles', function (){
     return Meteor.roles.find({});

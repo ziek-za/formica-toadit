@@ -48,6 +48,35 @@ Meteor.methods({
 			}
 		});
 	},
+	// Upload method for CollectionFS to upload an Image to user profile
+	UTIL_AddImageUpload: function(userId, targetUserId, img_id, img_name) {
+		// authorize if it isSelf / isAdmin
+		Meteor.call("AUTH_IsSelfOrAdmin", userId, targetUserId);
+		// Ammend file upload to user
+		var img_path = "/cfs/files/images/" + img_id;
+		Meteor.users.update({'_id':targetUserId}, {$set: {
+				'profile.picture': {
+					'_id': img_id,
+					'regular': img_path,
+					'thumbnail': img_path,
+					'uploaded': new Date()
+				}
+			}
+		});
+	},
+	// Removes a profile picture from the user's profile and from
+	// the collection. Called from server.
+	UTIL_RemoveImage: function(userId, cvId) {
+		var default_image = "/style/images/default_jobseeker_profile.jpg";
+		// Remove CV from users profile
+		Meteor.users.update({'_id':userId}, {$set: {
+				'profile.picture': {
+					'regular': default_image,
+					'thumbnail': default_image
+				}
+			}
+		});
+	},
 	// Used to edit a jobsekers profile, as an admin or as
 	// as the profile owner
 	UTIL_EditJobSeekerProfile: function(userId, targetUserId, jobSeekerObj) {
