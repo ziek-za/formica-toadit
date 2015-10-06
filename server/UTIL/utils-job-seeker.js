@@ -11,7 +11,7 @@ Meteor.methods({
 		// Set user profile status: pending/active/inactive
 		Meteor.users.update({'_id':id, 'emails.address':email}, {$set: {
 				'emails.$.verified': false,
-				'profile.status': 'pending'
+				'profile.status': 'details pending'
 			}
 		});
         // Set role (job-seeker/admin/employer)
@@ -93,6 +93,17 @@ Meteor.methods({
 				'profile.salary_details': jobSeekerObj.salary_details
 			}
 		});
+		// Check to see if isSelf and if details are complete
+		if (userId == targetUserId) {
+			var user = Meteor.users.findOne({'_id':targetUserId});
+			if (user.profile.status == "details pending") {
+				// set to details complete
+				Meteor.users.update({'_id':targetUserId}, {$set: {
+						'profile.status': 'details complete'
+					}
+				});
+			}
+		}
 	},
 	UTIL_ChangeEmail: function(targetUserId, userId, email, curr_email) {
 		// Authorize if isSelf

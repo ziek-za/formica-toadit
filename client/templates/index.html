@@ -33,6 +33,11 @@
             {{/if}}
           </ul>
         </div>
+        {{#if profileDetailsPending}}
+          <div class="navbar-notification">
+            <span>Your account details are not complete. In order to be verified, you are required to enter the necessary details - </span><i><a href="{{pathFor route='Profile_JS_Edit' _id=currentUser._id}}">Edit Profile</a></i>
+          </div>
+        {{/if}}
       </header>
       <div class="yield-wrapper">
         {{> yield}}

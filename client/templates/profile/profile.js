@@ -103,6 +103,15 @@ Template.Profile.helpers({
 	// Profile > Profile_JS
 	Template.Profile_JS.helpers({
 		primaryEmail: function() { return this.emails[0].address; },
+		// Used to show or hide the profile notification to update details
+		profileNotification: function() {
+			var userId = Meteor.userId(); var targetUserId = this._id;
+			if (userId == targetUserId &&
+				this.profile.status == "details pending") {
+				return true;
+			}
+			return false;
+		},
 		canEdit: function() {
 			var targetUserId = this._id;
 			var userId = Meteor.userId();
@@ -220,6 +229,7 @@ Template.Profile.helpers({
  		jobs: function() { return JOBS(); },
  		sapModules: function() { return SAP_MODULES; },
  		industries: function() { return INDUSTRIES; },
+ 		ITSkills: function() { return IT_SKILLS; },
  		accountStates: function() { return CONST_JOBSEEKER_STATES; },
  		pageContainsError: function() { return Session.get('abcinput-error'); },
  		cvError: function() { return Session.get('cv-error'); },

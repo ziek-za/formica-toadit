@@ -46,32 +46,33 @@ Template.Register_JS.events({
 		// --------
 		//if (ie) { return; }
 		// PERSONAL DETAILS
-		job_seeker.personal_details.name = Session.get('reg-name');
-		job_seeker.personal_details.surname = Session.get('reg-surname');
-		job_seeker.personal_details.tel_number = Session.get('reg-tel');
-		job_seeker.personal_details.cell_number = Session.get('reg-cell');
-		job_seeker.personal_details.province = Session.get('reg-province');
-		job_seeker.personal_details.suburb = Session.get('reg-suburb');
+		job_seeker.personal_details.name = null;//Session.get('reg-name');
+		job_seeker.personal_details.surname = null;//Session.get('reg-surname');
+		job_seeker.personal_details.tel_number = null;//Session.get('reg-tel');
+		job_seeker.personal_details.cell_number = null;//Session.get('reg-cell');
+		job_seeker.personal_details.province = null;//Session.get('reg-province');
+		job_seeker.personal_details.suburb = null;//Session.get('reg-suburb');
 		// SALARY DETAILS
-		job_seeker.salary_details.current = parseInt(Session.get('reg-current-salary'));
-		job_seeker.salary_details.moveFor = parseInt(Session.get('reg-move-for-salary'));
-		job_seeker.salary_details.ideal = parseInt(Session.get('reg-ideal-salary'));
+		job_seeker.salary_details.current = null;//parseInt(Session.get('reg-current-salary'));
+		job_seeker.salary_details.moveFor = null;//parseInt(Session.get('reg-move-for-salary'));
+		job_seeker.salary_details.ideal = null;//parseInt(Session.get('reg-ideal-salary'));
 		// ROLE REQUIREMENTS
-		job_seeker.role_requirements.current_job = Session.get('reg-current-job');
-		job_seeker.role_requirements.desired_job = Session.get('reg-desired-job');
-		job_seeker.role_requirements.sap_module = Session.get('reg-sap-module');
-		job_seeker.role_requirements.industry = Session.get('reg-industry');
+		job_seeker.role_requirements.current_job = null;//Session.get('reg-current-job');
+		job_seeker.role_requirements.desired_job = null;//Session.get('reg-desired-job');
+		job_seeker.role_requirements.sap_module = null;//Session.get('reg-sap-module');
+		job_seeker.role_requirements.industry = null;//Session.get('reg-industry');
+		job_seeker.role_requirements.skills = [];
 		// Create Job Seeker
 		var portal = this.key;
-		var file = t.find('.js-cv-input').files[0];
-		var cv = new FS.File(file); var containsCV = false;
-		if (file) { containsCV = true; }
+		//var file = t.find('.js-cv-input').files[0];
+		//var cv = new FS.File(file); var containsCV = false;
+		//if (file) { containsCV = true; }
 		// Set 'processing' to true
 		Session.set('processing', true);
 		Meteor.call("UTIL_CreateNewJobSeeker", job_seeker, email, password_1, function(err, jobSeekerId) {
 			if (err) {
 				Notify("Job seeker register error: " + err.error, "fail");
-			} else if (jobSeekerId && containsCV) {
+			} /*else if (jobSeekerId && containsCV) {
 				cv.metadata = {
 					'uploadUserId': jobSeekerId,
 					'targetUserId': jobSeekerId
@@ -83,7 +84,7 @@ Template.Register_JS.events({
 						});
 					}
 				});
-			} else if (jobSeekerId) {
+			}*/ else if (jobSeekerId) {
 				Router.go('Login', {_portal: portal}, {query: 'registrationSuccess=true'});
 			}
 		});

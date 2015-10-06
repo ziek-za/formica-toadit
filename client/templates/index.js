@@ -11,6 +11,9 @@ Template.registerHelper('equalsor2', function (a, b, c) {
 Template.registerHelper('equalsor3', function (a, b, c, d) {
 	return a === b || a === c || a === d;
 });
+Template.registerHelper('equalsor4', function (a, b, c, d, e) {
+	return a === b || a === c || a === d || a === e;
+});
 Template.registerHelper('isSelf', function (_id) {
 	return Meteor.userId() === _id;
 });
@@ -28,7 +31,14 @@ Template.userControls.events({
 
 // INDEX PAGE
 Template.Index.helpers({
-	notifications: function() { return Session.get(GLOBAL_NOTIFY); }
+	notifications: function() { return Session.get(GLOBAL_NOTIFY); },
+	// Used to show the index page notification for editting/completing job-seeker details
+	profileDetailsPending: function() {
+		var user = Meteor.user();
+		if (Roles.userIsInRole(Meteor.userId(), 'job-seeker') && 
+			user.profile.status === "details pending") { return true; }
+		return false;
+	}
 });
 Template.Index.events({
 	"click .js-remove-notification": function(e, t) {

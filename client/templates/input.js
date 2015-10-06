@@ -10,8 +10,15 @@ Template.input.created = function() {
 	/*Session.set('change-cv-input', false);
 	Session.set('remove-cv', false);*/
 	// Set session variable to current value
-	if (this.data.value) { Session.set(this.data.session, this.data.value); }
-	else { Session.set(this.data.session, ''); }
+	if (this.data.value) {
+		Session.set(this.data.session, this.data.value);
+	} else { 
+		Session.set(this.data.session, '');
+	}
+	// remove duplicates from input-dropdown arrray
+	if (this.data.type == "input-dropdown") {
+		remove_duplicates(this.data.session, this.data.value, this.data.data);
+	}
 	// Reset errors
 	Session.set(this.data.session + '-error', false);
 	Session.set(this.data.seed + 'input-error-display', false);
@@ -46,6 +53,7 @@ Template.input.helpers({
 	resultsVisible: function() { return Session.get(this.session+'-visibility'); },
 	selectedOption: function() { return Session.get(this.session); },
 	showClear: function() { return Session.get(this.session); },
+	skills: function() { return Session.get(this.session); },
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
 	// _+_+_+_+_+UPLOAD_+_+_+_+_+_+
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
@@ -100,7 +108,9 @@ Template.input.events({
         		display_data.push(this.data[i]);
         	}
         }
-        Session.set(this.session + '-data', display_data);
+        if (this.type == "input-dropdown") {
+        	remove_duplicates(this.session, Session.get(this.session), display_data);
+        } else { Session.set(this.session + '-data', display_data); }
     }, 200),
     // Used to remove the current value
     "click .js-clear-combobox": function(e, t) {
@@ -111,20 +121,27 @@ Template.input.events({
     // Check to see if an option was chosen, otherwise close combobox and
     // reset to selected value
     "blur .js-search-combobox": function(e, t) {
-    	var value;
-
+    	if (this.type != "input-dropdown") {
+    		var value;
 	    	value = Session.get(this.session);
 	    	if (_.isUndefined(value)) { value = ""; }
 	    	if (this.type != "combobox-other") { t.find('.js-search-combobox').value = value; }
 	    	else { value = t.find('.js-search-combobox').value; }
 	    	if (validate_input(this, value, true)) { reset_errors(this.session, this.seed); }
-    	
+	    } else {
+	    	t.find('.js-search-combobox').value = '';
+	    }
     	set_visibilty(this.session, false);
     },
     // Used to change the session variable for inputs other than
     // the provided search data
     "change .js-search-combobox": function(e ,t) {
 
+    },
+    // used to dropdown the combobox for dropdown input
+    "click .input-dropdown-ico": function() {
+    	remove_duplicates(this.session, Session.get(this.session), this.data);
+    	set_visibilty(this.session, "toggle");
     },
     // _+_+_+_+_+_+_+_+_+_+_+_+_+_+
 	// _+_+_+_+_+UPLOAD_+_+_+_+_+_+
@@ -157,6 +174,37 @@ Template.input.events({
     		Session.set(Template.parentData(1).session, this.toString());
 	    }
 	});
+
+	// input > inputDropdownArrayComboboxOption
+	Template.inputDropdownArrayComboboxOption.events({
+		// Used to select a new option from the dropdown
+	    "mousedown .js-input-option": function(e, t) {
+	    	// Add to session array
+	    	var session = Template.parentData(1).session;
+	    	var skills_arr = Session.get(session);
+	    	console.log(skills_arr);
+	    	skills_arr.push(this.toString());
+	    	Session.set(session, skills_arr);
+	    	set_visibilty(session, false);
+	    }
+	});
+
+		//input > inputDropdownArrayComboboxOption > inputDropdownArrayComboboxItem
+		Template.inputDropdownArrayComboboxItem.events({
+			"click .js-remove": function(e, t) {
+				var obj = Template.parentData(1);
+				var val = this.toString();
+				//remove item from current array
+				var val_arr = Session.get(obj.session);
+				for (i = 0; i < val_arr.length; i++) {
+					if (val == val_arr[i]) { val_arr.splice(i, 1); break; }
+				}
+				//add back to overall items
+				remove_duplicates(obj.session, val_arr, obj.data);
+				//set current session items
+				Session.set(obj.session, val_arr);
+			}
+		});
 	// input > inputDropdownOption
 	/*Template.inputDropdownOption.events({
 		// Used to select a new option from the dropdown
@@ -284,5 +332,20 @@ var set_errors = function(sessionPrefix, error, isKeyUp, seed) {
 	Session.set(sessionPrefix+'-error', error);
 };
 var set_visibilty = function(sessionPrefix, bool) {
+	if (bool == "toggle") {
+		bool = Session.get(sessionPrefix+'-visibility');
+		bool = !bool;
+	}
 	Session.set(sessionPrefix+'-visibility', bool);
+};
+var remove_duplicates = function(sessionPrefix, value_array, data) {
+	var out_array = [];
+	for (i = 0; i < data.length; i++) {
+		var contains = false;
+		for (k = 0; k < value_array.length; k++) {
+			if (data[i] == value_array[k]) { contains = true; }
+		}
+		if (!contains) { out_array.push(data[i]); }
+	}
+	Session.set(sessionPrefix+'-data', out_array);
 };

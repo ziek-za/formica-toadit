@@ -17,6 +17,29 @@
 				{{/each}}
 			</select>
 		{{/if}}
+		{{#if equals type 'input-dropdown'}}
+			<div class="input-combobox-wrapper">
+				<i class="glyphicon glyphicon-chevron-down input-dropdown-ico"></i>
+				<input type="text" placeholder="Type to search" class="{{#if display_error}}error {{/if}}js-search-combobox input-combobox" />
+				{{#if resultsVisible}}
+					<ul>
+						{{#if equals type 'combobox'}}
+							{{#if results}}{{else}}
+								<li><i>No Results</i></li>
+							{{/if}}
+						{{/if}}
+						{{#each results}}
+							{{> inputDropdownArrayComboboxOption}}
+						{{/each}}
+					</ul>
+				{{/if}}
+			</div>
+			<div class="input-comboboxdropdown-skills">
+				{{#each skills}}
+					{{> inputDropdownArrayComboboxItem}}
+				{{/each}}
+			</div>
+		{{/if}}
 		{{#if equals type 'date'}}
 			<div class="input-daterange input-group tournament-signup-closing" id="datepicker{{session}}">
 				<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
@@ -78,6 +101,14 @@
 	<template name="inputComboboxOption">
 		<a href="" class="js-input-option"><li>{{this}}</li></a>
 	</template>
+
+	<template name="inputDropdownArrayComboboxOption">
+		<a href="" class="js-input-option"><li>{{this}}</li></a>
+	</template>
+
+		<template name="inputDropdownArrayComboboxItem">
+			<span class="skill-item">{{.}}<i class=" glyphicon glyphicon-remove js-remove"></i></span>
+		</template>
 
 	<template name="inputDropdownOption">
 		{{#if selected}}

@@ -13,85 +13,84 @@
 		</div>
 		<!-- PROFILE DETAILS -->
 		<div class="details-wrapper">
-			<div class="profile-header">
-				<!-- PERSONAL -->
-				<div class="personal-details">
-					<h1>{{profile.personal_details.name}} {{profile.personal_details.surname}}</h1>
-					<h3><i class="glyphicon glyphicon-map-marker"></i> {{profile.personal_details.suburb}}, {{profile.personal_details.province}}</h3>
+			{{#if profileNotification}}
+				<div class="profile-page-alert">
+					Your profile is currently not complete. This means you have details that are outstanding.<br />In order to progress you are required to update your details, you can do so here - <a href="{{pathFor route='Profile_JS_Edit' _id=this._id}}">Edit Profile</a>.
 				</div>
-				<!-- VIEWSHIP GRAPH -->
-				<div class="viewship-graph">
-					{{> Profile_JS_Views}}
+			{{else}}
+				<div class="profile-header">
+					<!-- PERSONAL -->
+					<div class="personal-details">
+						<h1>{{profile.personal_details.name}} {{profile.personal_details.surname}}</h1>
+						<h3><i class="glyphicon glyphicon-map-marker"></i> {{profile.personal_details.suburb}}, {{profile.personal_details.province}}</h3>
+					</div>
+					<!-- VIEWSHIP GRAPH -->
+					<div class="viewship-graph">
+						{{> Profile_JS_Views}}
+					</div>
 				</div>
-			</div>
-			<div class="profile-body content">
-				{{#if isSelf _id}}
-					{{#if profile.cv}}{{else}}
-						<div class="profile-page-alert">
-							You currently don't have a CV uploaded. It is required in order for you to be <strong>activated</strong> on <i>Toadit.com</i>.<br />You can upload a CV under '<a href="{{pathFor route='Profile_JS_Edit' _id=this._id}}">Edit Profile</a>'.
+				<div class="profile-body content">
+					{{#if profile.progress}}
+						<div style="display:inline-block;width:70%;vertical-align:top;" class="content admin-specific">
+							<h3 class="content-header">Administration Details</h3>
+							<div class="content">
+								<h5 class="content-header">Comment/s</h5>
+								<div class="content">{{profile.progress.comment}}</div>
+							</div>
+						</div>
+						<div class="screening-admin">
+							<h5><i class="glyphicon glyphicon-user"></i> Screening Admin:</h5>
+							<div>{{screeningAdmin.personal_details.name}} {{screeningAdmin.personal_details.surname}}</div>
 						</div>
 					{{/if}}
-				{{/if}}
-				{{#if profile.progress}}
-					<div style="display:inline-block;width:70%;vertical-align:top;" class="content admin-specific">
-						<h3 class="content-header">Administration Details</h3>
+					<!-- CONTACT -->
+					<div class="content login-specific">
+						<h3 class="content-header">Contact Details</h3>
 						<div class="content">
-							<h5 class="content-header">Comment/s</h5>
-							<div class="content">{{profile.progress.comment}}</div>
+							<div><span class="detail-title">Telephone Number:</span> +27 {{profile.personal_details.tel_number}}</div>
+							<div><span class="detail-title">Cell Number:</span> +27 {{profile.personal_details.cell_number}}</div>
+							<div><span class="detail-title">Email Address:</span> {{primaryEmail}}</div>
 						</div>
 					</div>
-					<div class="screening-admin">
-						<h5><i class="glyphicon glyphicon-user"></i> Screening Admin:</h5>
-						<div>{{screeningAdmin.personal_details.name}} {{screeningAdmin.personal_details.surname}}</div>
-					</div>
-				{{/if}}
-				<!-- CONTACT -->
-				<div class="content login-specific">
-					<h3 class="content-header">Contact Details</h3>
-					<div class="content">
-						<div><span class="detail-title">Telephone Number:</span> +27 {{profile.personal_details.tel_number}}</div>
-						<div><span class="detail-title">Cell Number:</span> +27 {{profile.personal_details.cell_number}}</div>
-						<div><span class="detail-title">Email Address:</span> {{primaryEmail}}</div>
-					</div>
-				</div>
-				<div class="content login-specific inline">
-					<h3 class="content-header">Work details</h3>
-					<div class="content fill">
-						<h5 class="content-header">Curriculum Vitae for <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}</strong></h5>
-						<div class="content">
-							{{#if profile.cv}}
-								{{#each profile.cv}}
-									<div>
-										<strong>  <i class="glyphicon glyphicon-file"></i> {{name}}</strong><span style="padding:10px;"></span>
-										<a href="{{path}}" target="_blank">View</a>
-										/
-										<a href="{{path}}?download=true" target="_blank"><i class="glyphicon glyphicon-save"></i> Download</a>
-									</div>
-								{{/each}}
-							{{else}}
-								<i>No <strong>CV</strong> to display.</i>
-							{{/if}}
+					<div class="content login-specific inline">
+						<h3 class="content-header">Work details</h3>
+						<div class="content fill">
+							<h5 class="content-header">Curriculum Vitae for <strong>{{profile.personal_details.name}} {{profile.personal_details.surname}}</strong></h5>
+							<div class="content">
+								{{#if profile.cv}}
+									{{#each profile.cv}}
+										<div>
+											<strong>  <i class="glyphicon glyphicon-file"></i> {{name}}</strong><span style="padding:10px;"></span>
+											<a href="{{path}}" target="_blank">View</a>
+											/
+											<a href="{{path}}?download=true" target="_blank"><i class="glyphicon glyphicon-save"></i> Download</a>
+										</div>
+									{{/each}}
+								{{else}}
+									<i>No <strong>CV</strong> to display.</i>
+								{{/if}}
+							</div>
 						</div>
-					</div>
-					<div class="content">
-						<h5 class="content-header">Role Requirements</h5>
 						<div class="content">
-							<div><span class="detail-title">Current Job:</span> {{profile.role_requirements.current_job}}</div>
-							<div><span class="detail-title">Desired Job:</span> {{profile.role_requirements.desired_job}}</div>
-							<div><span class="detail-title">SAP Module:</span> {{profile.role_requirements.sap_module}}</div>
-							<div><span class="detail-title">Industry:</span> {{profile.role_requirements.industry}}</div>
+							<h5 class="content-header">Role Requirements</h5>
+							<div class="content">
+								<div><span class="detail-title">Current Job:</span> {{profile.role_requirements.current_job}}</div>
+								<div><span class="detail-title">Desired Job:</span> {{profile.role_requirements.desired_job}}</div>
+								<div><span class="detail-title">SAP Module:</span> {{profile.role_requirements.sap_module}}</div>
+								<div><span class="detail-title">Industry:</span> {{profile.role_requirements.industry}}</div>
+							</div>
 						</div>
-					</div>
-					<div class="content">
-						<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>
 						<div class="content">
-							<div><span class="detail-title">Current Salary:</span> R {{profile.salary_details.current}}</div>
-							<div><span class="detail-title">Willing to move for:</span> R {{profile.salary_details.moveFor}}</div>
-							<div><span class="detail-title">Ideal Salary:</span> R {{profile.salary_details.ideal}}</div>
+							<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>
+							<div class="content">
+								<div><span class="detail-title">Current Salary:</span> R {{profile.salary_details.current}}</div>
+								<div><span class="detail-title">Willing to move for:</span> R {{profile.salary_details.moveFor}}</div>
+								<div><span class="detail-title">Ideal Salary:</span> R {{profile.salary_details.ideal}}</div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			{{/if}}
 		</div>
 	</div>
 </template>
@@ -106,7 +105,9 @@
 				<h4><i class="glyphicon glyphicon-check"></i> Account Progress</h4>
 			</div><!--
 		--><div class="progress-ico verified">
-			<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>
+			{{#if equalsor4 profile.status 'active' 'placed' 'pending' 'details complete'}}
+				<div class="verified"><i class="glyphicon glyphicon-ok"></i></div>
+			{{/if}}
 			<div class="details">
 				<div class="title">Verified Account</div>
 				<div class="sub-title"><strong>{{profile.personal_details.name}}</strong> has signed up with correct details and is verified</div>
@@ -135,7 +136,7 @@
 		</div><!--
 	--></div>
 		<div class="progress-bar-wrapper"><!--
-			--><div class="progress-bar-step"><div><span>1</span> Verified Account</div></div><!--
+			--><div class="progress-bar-step"><div class="{{#if equalsor4 profile.status 'active' 'placed' 'pending' 'details complete'}}{{else}} inactive{{/if}}"><span>1</span> Verified Account</div></div><!--
 			--><div class="progress-bar-step"><div class="{{#if equalsor3 profile.status 'active' 'placed' 'pending'}}{{else}} inactive{{/if}}"><span>2</span> Pending Screening</div></div><!--
 			--><div class="progress-bar-step"><div class="{{#if equalsor2 profile.status 'active' 'placed'}}{{else}} inactive{{/if}}"><span>3</span> Active Account</div></div><!--
 			--><div class="progress-bar-step"><div class="last-bar {{#if equals profile.status 'placed'}}{{else}} inactive{{/if}}"><span>4</span> Placed</div></div><!--
@@ -231,6 +232,7 @@
 					{{> input seed='abc' session='desired-job' label='Desired Job' value=profile.role_requirements.desired_job type='combobox-other' required=true data=jobs}}
 					{{> input seed='abc' session='sap-module' label='SAP Module' value=profile.role_requirements.sap_module type='combobox' required=true data=sapModules}}
 					{{> input seed='abc' session='industry' label='Industry' value=profile.role_requirements.industry type='combobox-other' required=true data=industries}}
+					{{> input seed='abc' session='it-skills' label='IT Skills' value=profile.role_requirements.skills type='input-dropdown' required=true data=ITSkills}}
 				</div>
 				<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>
 				<div class="content">

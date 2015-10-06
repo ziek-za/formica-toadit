@@ -60,10 +60,21 @@
 
 <template name="userControls">
 	{{#if currentUser}}
-      <div class="user-logout-controls">
+		<div class="profile-controls-wrapper">
+			<div class="navbar-controls profile-controls">
+				<span class="user-ico"><i class="glyphicon glyphicon-user"></i></span>
+				<span class="view-profile">
+					<a href="{{#if isInRole 'admin'}}{{pathFor route='Profile_Admin_Edit' _id=currentUser._id}}{{else}}{{pathFor route='Profile' _id=currentUser._id}}{{/if}}">Your Profile</a>
+				</span>
+				<span class="logout">
+					<i><a href="" class="js-logout"><i class="glyphicon glyphicon-share"></i> Logout</a></i>
+				</span>
+			</div>
+		</div>
+      <!--<div class="user-logout-controls">
       	Logged in as 
         <a href="{{#if isInRole 'admin'}}{{pathFor route='Profile_Admin_Edit' _id=currentUser._id}}{{else}}{{pathFor route='Profile' _id=currentUser._id}}{{/if}}"><strong>{{#if currentUser.profile.personal_details}}{{currentUser.profile.personal_details.name}} {{currentUser.profile.personal_details.surname}}{{else}}{{currentUser.profile.company_details.name}}{{/if}}</strong></a>, 
        <i><a href="" class="js-logout">Logout</a></i>
-      </div>
+      </div>-->
     {{/if}}
 </template>

@@ -136,6 +136,10 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 	.input-combobox-wrapper {
 		display:inline-block;
 		position:relative;
+		i.input-dropdown-ico {
+			position: absolute; cursor:pointer;
+			right: 5px;top: 10px;
+		}
 		ul {
 	 		position:absolute;
 	 		z-index:1111111;
@@ -378,12 +382,26 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 }
 
 // NAVBAR CONTROLS
-.user-logout-controls {
+.profile-controls-wrapper {
 	position:absolute;
-	right: 10px;
-	top: 0px;
-	font-size: 13px;
-	color: #808080;
+	right: 10px;top: 10px;
+	.navbar-controls.profile-controls {
+		display:table;
+		height:100%;
+		span {
+			display:table-cell;vertical-align:middle; margin-left:8px;
+			.glyphicon-user { color: @main-colour-1; font-size:22px; vertical-align:middle; margin-right:8px; }
+			a { font-size: 12px; line-height: 12px;	padding: 6px 10px !important; }
+		}
+		span.view-profile {
+			a { background-color: @main-colour-1; color: #FFF; }
+		}
+		span.logout {
+
+		}
+	}
+	//font-size: 13px;
+	//color: #808080;
 }
 
 .navbar-menu {
@@ -399,6 +417,17 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 		a:hover { color:@main-colour-1;}
 		a:hover > li { background-color: rgba(66, 66, 66, 1); }
 	}	
+}
+
+.navbar-notification {
+	background-color: #FBBA7C;
+	color: #FFF;
+	text-align: center;
+	width: 100%;
+	margin: -20px 0 10px 0;
+	z-index: -1;
+	position: relative;
+	span { text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2); }
 }
 
  // Tables
@@ -586,6 +615,14 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 		.details-wrapper {
 			width:80%;
 			padding-left:40px;
+			.profile-page-alert {
+				border:1px solid @error-colour;
+				color: @error-colour;
+				background-color:@error-colour-faded;
+				padding:10px 20px;
+				margin-bottom:250px;
+				text-align:center;
+			}
 			.profile-header {
 				height:@profile-header-height;
 				padding-left:10px;
@@ -605,14 +642,6 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 			.profile-body {
 				padding:15px 10px;
 				min-height:450px;
-				.profile-page-alert {
-					border:1px solid @error-colour;
-					color: @error-colour;
-					background-color:@error-colour-faded;
-					padding:10px 20px;
-					margin-bottom:15px;
-					text-align:center;
-				}
 			}
 		}
 	}
@@ -971,3 +1000,11 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 	.vacancies-list-wrapper {
 		.content.first { width:75%; margin:0 auto; }
 	}
+
+// SKILL ITEM
+.skill-item {
+	background:rgba(0,0,0,0.4); color:white;
+	padding:6px 8px; font-size:12px;
+	.js-remove { cursor:pointer; margin-left:6px; vertical-align:middle;}
+}
+.skill-item:hover { background:rgba(0,0,0,0.6); }
