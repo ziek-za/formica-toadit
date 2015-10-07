@@ -230,8 +230,11 @@
 				<div class="content">
 					{{> input seed='abc' session='current-job' label='Current Job' value=profile.role_requirements.current_job type='combobox-other' required=true data=jobs}}
 					{{> input seed='abc' session='desired-job' label='Desired Job' value=profile.role_requirements.desired_job type='combobox-other' required=true data=jobs}}
-					{{> input seed='abc' session='sap-module' label='SAP Module' value=profile.role_requirements.sap_module type='combobox' required=true data=sapModules}}
-					{{> input seed='abc' session='industry' label='Industry' value=profile.role_requirements.industry type='combobox-other' required=true data=industries}}
+					{{> input seed='abc' session='sap-module' label='SAP Module' value=profile.role_requirements.sap_module type='combobox' required=false data=sapModules}}
+					{{> input seed='abc' session='industry' label='Industry' value=profile.role_requirements.industry type='combobox-other' required=false data=industries}}
+				</div>
+				<h5 class="content-header">IT Skills</h5>
+				<div class="content">
 					{{> input seed='abc' session='it-skills' label='IT Skills' value=profile.role_requirements.skills type='input-dropdown' required=true data=ITSkills}}
 				</div>
 				<h5 class="content-header">Salary Details <span style="color:gray;float:right;font-size:14px;">(Monthly Salary)</span></h5>

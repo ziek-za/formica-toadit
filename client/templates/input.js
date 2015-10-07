@@ -54,6 +54,7 @@ Template.input.helpers({
 	selectedOption: function() { return Session.get(this.session); },
 	showClear: function() { return Session.get(this.session); },
 	skills: function() { return Session.get(this.session); },
+	dropdownOpen: function() { return Session.get(this.session+'-visibility'); },
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
 	// _+_+_+_+_+UPLOAD_+_+_+_+_+_+
 	// _+_+_+_+_+_+_+_+_+_+_+_+_+_+
@@ -180,12 +181,18 @@ Template.input.events({
 		// Used to select a new option from the dropdown
 	    "mousedown .js-input-option": function(e, t) {
 	    	// Add to session array
-	    	var session = Template.parentData(1).session;
+	    	var obj = Template.parentData(1);
+	    	var session = obj.session;
 	    	var skills_arr = Session.get(session);
-	    	console.log(skills_arr);
-	    	skills_arr.push(this.toString());
+	    	skills_arr.push({
+	    		"skill":this.toString(),
+	    		"years_experience": null
+	    	});
 	    	Session.set(session, skills_arr);
 	    	set_visibilty(session, false);
+	    	//reset errors
+	    	//check for errors
+			if (validate_input(obj, skills_arr, false)) { reset_errors(session, obj.seed); }
 	    }
 	});
 
@@ -193,16 +200,31 @@ Template.input.events({
 		Template.inputDropdownArrayComboboxItem.events({
 			"click .js-remove": function(e, t) {
 				var obj = Template.parentData(1);
-				var val = this.toString();
+				var val = this.skill;
 				//remove item from current array
 				var val_arr = Session.get(obj.session);
 				for (i = 0; i < val_arr.length; i++) {
-					if (val == val_arr[i]) { val_arr.splice(i, 1); break; }
+					if (val == val_arr[i].skill) { val_arr.splice(i, 1); break; }
 				}
 				//add back to overall items
 				remove_duplicates(obj.session, val_arr, obj.data);
 				//set current session items
 				Session.set(obj.session, val_arr);
+				//check for errors
+				validate_input(obj, val_arr, false);
+			},
+			// used to check for changes onyears of experinece on each skill
+			"change .js-skill-yrs": function(e, t) {
+				var obj = Template.parentData(1);
+				var val_arr = Session.get(obj.session);
+				for (i = 0; i < val_arr.length; i++) {
+					if (val_arr[i].skill == this.skill) {
+						val_arr[i].years_experience = parseFloat(t.find(".js-skill-yrs").value);
+						console.log(val_arr[i]);
+					}
+				}
+				//check for errors
+				if (validate_input(obj, val_arr, true)) { reset_errors(obj.session, obj.seed); Session.set(obj.session, val_arr); }
 			}
 		});
 	// input > inputDropdownOption
@@ -254,6 +276,23 @@ var validate_input = function(inputData, value, isKeyUp) {
 	// GENERIC CHECKS
 	// check if is required
 	if (inputData.required) {
+		if (inputData.type == "input-dropdown") {
+			if (value.length == 0) {
+				set_errors(inputData.session, "<i>"+ label + "</i> requires at least one skill", isKeyUp, inputData.seed);
+				return false;
+			} else {
+				// Check to see that years of experience are added to each skill
+				for (i = 0; i < value.length; i++) {
+					if (!value[i].years_experience) {
+						set_errors(inputData.session, "<i>"+ value[i].skill + "</i> requires years experience to be defined", isKeyUp, inputData.seed);
+						return false;
+					} else if (value[i].years_experience < 0) {
+						set_errors(inputData.session, "<i>"+ value[i].skill + "</i> years experience cannot be negative", isKeyUp, inputData.seed);
+						return false;
+					}
+				}
+			}
+		}
 		if (value == "") {
 			console.log("Setting error for 'required field'");
 			set_errors(inputData.session, "<i>"+ label + "</i> is required", isKeyUp, inputData.seed);
@@ -343,7 +382,7 @@ var remove_duplicates = function(sessionPrefix, value_array, data) {
 	for (i = 0; i < data.length; i++) {
 		var contains = false;
 		for (k = 0; k < value_array.length; k++) {
-			if (data[i] == value_array[k]) { contains = true; }
+			if (data[i] == value_array[k].skill) { contains = true; }
 		}
 		if (!contains) { out_array.push(data[i]); }
 	}

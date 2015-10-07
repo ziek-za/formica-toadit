@@ -294,7 +294,8 @@ Template.Profile.helpers({
  				'current_job': Session.get('current-job'),
  				'desired_job': Session.get('desired-job'),
  				'sap_module': Session.get('sap-module'),
- 				'industry': Session.get('industry')
+ 				'industry': Session.get('industry'),
+ 				'skills': Session.get('it-skills')
  			};
  			// Change of salary details
  			var salary_details = {

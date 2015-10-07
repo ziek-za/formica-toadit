@@ -19,7 +19,7 @@
 		{{/if}}
 		{{#if equals type 'input-dropdown'}}
 			<div class="input-combobox-wrapper">
-				<i class="glyphicon glyphicon-chevron-down input-dropdown-ico"></i>
+				<i class="glyphicon {{#if dropdownOpen}} glyphicon-chevron-up{{else}}glyphicon-chevron-down{{/if}} input-dropdown-ico"></i>
 				<input type="text" placeholder="Type to search" class="{{#if display_error}}error {{/if}}js-search-combobox input-combobox" />
 				{{#if resultsVisible}}
 					<ul>
@@ -107,7 +107,13 @@
 	</template>
 
 		<template name="inputDropdownArrayComboboxItem">
-			<span class="skill-item">{{.}}<i class=" glyphicon glyphicon-remove js-remove"></i></span>
+			<span class="skill-item-wrapper">
+				<span class="skill-item">{{skill}}</span>
+				<span class="skill-yrs">
+					Yrs: <input class="js-skill-yrs" step="any" value="{{years_experience}}" type="number" />
+				</span>
+				<span class="skill-remove"><i class=" glyphicon glyphicon-remove js-remove"></i></span>
+			</span>
 		</template>
 
 	<template name="inputDropdownOption">

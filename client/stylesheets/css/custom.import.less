@@ -1002,9 +1002,21 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 	}
 
 // SKILL ITEM
-.skill-item {
-	background:rgba(0,0,0,0.4); color:white;
-	padding:6px 8px; font-size:12px;
-	.js-remove { cursor:pointer; margin-left:6px; vertical-align:middle;}
+.skill-item-wrapper {
+	.skill-yrs {
+		border:1px solid rgba(0,0,0,0.4); box-sizing:border-box; padding:5px 6px;
+		input { height: 20px; vertical-align: middle; width:50px; }
+	}
+	span { padding:6px 8px; font-size:12px; }
+	.skill-item,
+	.skill-remove {
+		background:rgba(0,0,0,0.4); color:white; 
+		.js-remove { cursor:pointer; vertical-align:middle;}
+	}
+	.skill-item { margin-right:-4px; }
 }
-.skill-item:hover { background:rgba(0,0,0,0.6); }
+.skill-item-wrapper:hover { 
+	.skill-item,
+	.skill-remove { background:rgba(0,0,0,0.6); }
+	.skill-yrs { border:1px solid rgba(0,0,0,0.6); }
+}
