@@ -80,7 +80,7 @@ form.contact-form {
 		background-colour:lightgray;
 		color:rgba(92, 92, 92, 1);
 		padding:8px 12px;
-		font-size:14px;
+		font-size:14px;line-height:17px;
 		text-align:center;
 		vertical-align:middle;
 		cursor:pointer !important;
@@ -469,16 +469,17 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 @profile-header-height:195px;
 // PROFILE
 .profile-wrapper {
-	.screening-admin {
-		display:inline-block;
-		width:25%;
-		border:1px solid lightgray;
-		float:right;
-		color:lightgray !important;
-		padding:10px 0;
-		border-radius:6px;
-		h5, div { color:inherit; text-align:center; color:gray; }
-		h5 { font-weight:bold; }
+	.admin-and-employer-controls {
+		width:29%;display:inline-block;
+		padding-left:10px;
+		.screening-admin {
+			display:block;// width:100%;
+			border:1px solid lightgray; padding:10px 8px;
+			color:lightgray !important;
+			margin-bottom:5px; text-align:center;
+			h5, div { color:inherit; text-align:center; color:gray; }
+			h5 { font-weight:bold; font-size:15px; line-height:15px; margin-bottom:10px; }
+		}
 	}
 	.detail-title {
 		font-weight:bold;
@@ -633,6 +634,9 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 				.personal-details {
 					padding-top:20px;
 					width:59%;
+					.viewing-with-token-wrapper {
+						text-align:center;background-color:@main-colour-1;color:white;padding:5px;margin-top:-15px;line-height:13px;margin-bottom:10px;
+					}
 				}
 				.viewship-graph {
 					width:40%;
@@ -642,6 +646,14 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 			.profile-body {
 				padding:15px 10px;
 				min-height:450px;
+				form.token-generation-wrapper {
+					margin-top:15px;
+					button { width:30%; }
+					input { width:70%; height:33px; text-align:center; }
+				}
+				div.exisiting-tokens-wrapper {
+					padding-top:8px;margin-top:8px;border-top:1px solid lightgray;
+				}
 			}
 		}
 	}
@@ -1003,6 +1015,7 @@ button.disabled { cursor:default;color:gray; background-color:lightgrey; }
 
 // SKILL ITEM
 .skill-item-wrapper {
+	margin:0 2px;
 	.skill-yrs {
 		border:1px solid rgba(0,0,0,0.4); box-sizing:border-box; padding:5px 6px;
 		input { height: 20px; vertical-align: middle; width:50px; }

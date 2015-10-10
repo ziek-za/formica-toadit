@@ -63,15 +63,17 @@ Template.Admin_Users.events({
     },
 	// Generates a new admin, first name/surname/email is required.
     // A password will be generated.
-    "click .js-generate-admin": function(e, t) {
+    "submit form": function(e, t) {
+        alert();
+        e.preventDefault();
     	// Admin profile
     	var admin = {
     		'personal_details': {}
     	};
     	// Read in values
-    	admin.personal_details.name = t.find('.js-admin-first-name').value;
-    	admin.personal_details.surname = t.find('.js-admin-surname').value;
-    	var email = t.find('.js-admin-email').value;
+    	admin.personal_details.name = e.target.firstName.value;
+    	admin.personal_details.surname = e.target.surname.value;
+    	var email = e.target.email.value;
 
     	// Call to generate admin
         var userId = Meteor.userId();
@@ -79,12 +81,14 @@ Template.Admin_Users.events({
     		if (err) {
     			Notify("Error creating administration: " + err.error, "fail");
     		} else {
-    			t.find('.js-admin-first-name').value = "";
-    			t.find('.js-admin-surname').value = "";
-    			t.find('.js-admin-email').value = "";
-    			Notify("Succesfully generated admin <strong>" + admin.personal_details.name + " " + admin.personal_details.surname + "</strong>", "success");
+    			e.target.firstName.value = "";
+    			e.target.surname.value = "";
+    			e.target.email.value = "";
+    			Notify("Succesfully generated admin <strong>" + admin.personal_details.name + " " + admin.personal_details.surname + "</strong>. An Email has been sent to them.", "success");
     		}
     	});
+
+        return false;
     },
 	// Used for searching through current admin staff
 	"keyup .js-search": _.throttle(function(e, t) {

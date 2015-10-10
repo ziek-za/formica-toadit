@@ -8,10 +8,36 @@ Meteor.publish('users', function(selector, options) {
 });
 // Profile for a registered user
 // (Both employer and job-seeker)
-Meteor.publish('profile', function(userId, currentUserId) {
-	// Check to see if the user is viewing their own
-	// profile
-	return Meteor.users.find({'_id':userId});
+Meteor.publish('profile', function(userId, currentUserId, token) {
+	currentUserId = this.userId;
+	// Check if the user viewing the profile is an admin
+	if (Roles.userIsInRole(currentUserId, 'admin') ||
+		userId == currentUserId ||
+		Roles.userIsInRole(userId, 'employer')) {
+		return Meteor.users.find({'_id':userId});
+	} else {
+		if (token) {
+			// check to see if token is valid
+			var jobseeker = Meteor.users.findOne({'_id':userId});
+			if (jobseeker.profile.request_tokens &&
+				jobseeker.profile.request_tokens.length > 0) {
+				for (i = 0; i < jobseeker.profile.request_tokens.length; i++) {
+					if (jobseeker.profile.request_tokens[i].token == token) {
+						//Meteor.call("UTIL_DeleteJobSeekerToken", userId, token);
+						return Meteor.users.find({'_id':userId});
+					}
+				}
+			}
+		}
+		return Meteor.users.find({'_id':userId}, {fields: {
+			'profile.personal_details.surname': 0,
+			'profile.personal_details.cell_number': 0,
+			'profile.personal_details.tel_number': 0,
+			'profile.cv': 0,
+			'emails': 0,
+			'profile.request_tokens': 0
+		}});
+	}
 });
 Meteor.publish('roles', function (){
     return Meteor.roles.find({});

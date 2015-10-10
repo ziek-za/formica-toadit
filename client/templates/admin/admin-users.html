@@ -56,10 +56,12 @@
 				<h5>Add New Member</h5>
 				<div class="indent">
 					<i>This will generate a new 'Administration Account', granting 'Admin' priveledges to the user. An email will be sent to their email address with the necessary Login details.</i><br /><br />
-					<input class="js-admin-first-name" placeholder="First Name" />
-					<input class="js-admin-surname" placeholder="Surname" />
-					<input class="js-admin-email" placeholder="Email Address" />
-					<button class="js-generate-admin">Submit</button>
+					<form>
+						<input type="text" name="firstName" placeholder="First Name" />
+						<input type="text" name="surname" placeholder="Surname" />
+						<input type="email" name="email" placeholder="Email Address" />
+						<button type="submit" class="special js-generate-admin">Create</button>
+					</form>
 				</div>
 				<h5>Search Exisiting Staff</h5>
 				<div class="indent">

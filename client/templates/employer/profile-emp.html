@@ -48,6 +48,26 @@
 	<div class="content-wrapper">
 		<h1 class="header-1"><i class="glyphicon glyphicon-cog"></i> Edit <strong>{{profile.company_details.name}}'s</strong> Profile</h1>
 		<div class="content">
+			<!-- ADMINISTRATION COMMANDS -->
+			{{#if isInRole 'admin'}}
+				<div class="content admin-specific">
+					<h3 class="content-header">Administration Specific Details</h3>
+					<div class="content">
+						<h5 class="content-header">Profile Status</h5>
+						<div class="content admin-commands-wrapper">						
+							{{> input seed='bvv' value=profile.status session='account-state' type='dropdown' data=accountStates}}
+							<div class="index">
+								<ul>
+									<li><strong>Pending Verification</strong> - This is a newly registered or unlisted company. They have not been manually verified by the staff of ToadIT. They will not be viewable under 'Employers'.</li>
+									<li><strong>Verified</strong> - This company has been verified and proven to be legitimate. They are viewable under 'Employers'.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<button class="js-save-admin">Save</button>
+					<button class="js-cancel">Cancel</button>
+				</div>
+			{{/if}}
 			<!-- LOGIN DETAILS -->
 			{{> Profile_Edit_Login}}
 			<!-- PROFILE DETAILS -->

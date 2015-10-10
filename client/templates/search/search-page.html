@@ -109,7 +109,7 @@
 	<template name="SearchDisplay_Emp">
 		<tr class="search-result-row employer">
 			<a href="{{pathFor route='Profile' _id=_id}}">
-				<td>{{profile.company_details.name}}</td>
+				<td>{{#if equals profile.status 'verified'}}<i class="glyphicon glyphicon-ok-sign" style="color:green;"></i> {{/if}}{{profile.company_details.name}}</td>
 			</a>
 			<td>{{profile.company_details.province}}</td>
 			<td>+27 {{profile.company_details.tel_number}}</td>

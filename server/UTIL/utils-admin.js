@@ -3,11 +3,10 @@ Meteor.methods({
 	// with the necessary login details
 	UTIL_CreateNewAdmin: function(userId, admin, email) {
 		// Authorization
+		userId = Meteor.userId();
 		Meteor.call("AUTH_IsAdmin", userId);
 		// Generate random password
 		var password = GenerateRandomString(4);
-		// For development purposes
-		console.log("Password: " + password);
 		var id = Accounts.createUser({
 			email: email,
 			password: password,
@@ -41,6 +40,16 @@ Meteor.methods({
 				'profile.status':edit_object.status,
 				'profile.progress.comment':edit_object.comment,
 				'profile.progress.assigned': {'_id': userId }
+			}
+		});
+	},
+	// Change profile details for an employer
+	UTIL_EditAdminSpecificDetailsEMP: function(targetUserId, edit_object) {
+		// Authorization
+		var userId = Meteor.userId();
+		Meteor.call("AUTH_IsAdmin", userId);
+		Meteor.users.update({'_id':targetUserId}, {$set: {
+				'profile.status':edit_object.status
 			}
 		});
 	},
@@ -144,5 +153,38 @@ Meteor.methods({
 		Meteor.call("AUTH_IsAdmin", userId);
 		// remove
 		Vacancies.remove({'_id':vacancyId});
+	},
+	// Used to generate a token to view a job seekers profile
+	UTIL_GenerateJobSeekerToken: function(jobSeekerId) {
+		var userId = Meteor.userId();
+		// Auth
+		Meteor.call("AUTH_IsAdmin", userId);
+		// Genereate token string
+		var token = GenerateRandomId(16);
+		// Add token to jobseeker profile
+		Meteor.users.update({'_id':jobSeekerId}, {$push: {
+				'profile.request_tokens': {
+					'date': new Date(),
+					'token': token
+				}
+			}
+		});
+		// Return url
+		var current_path = Meteor.absoluteUrl();
+		return current_path + "profile/" + jobSeekerId + "?token=" + token;
+	},
+	// Used to delete/remove atoken from a job seekers' profile
+	UTIL_RemoveJobSeekerToken: function(jobSeekerId, token) {
+		var userId = Meteor.userId();
+		// Auth
+		Meteor.call("AUTH_IsAdmin", userId);
+		Meteor.call("UTIL_DeleteJobSeekerToken", jobSeekerId, token);
+	},
+	UTIL_DeleteJobSeekerToken: function(jobSeekerId, token) {
+		// Remove token from profile
+		Meteor.users.update({'_id':jobSeekerId}, {$pull: {
+				'profile.request_tokens': { 'token': token }
+			}
+		});
 	}
 });

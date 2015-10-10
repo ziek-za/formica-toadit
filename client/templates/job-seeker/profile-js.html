@@ -1,3 +1,21 @@
+<template name="Profile_retracted">
+	{{#if isInRole 'admin'}}
+		{{#if prefix}}
+			{{prefix}} 
+		{{/if}}
+		{{value}}
+	{{else}}
+		{{#if value}}
+			{{#if prefix}}
+				{{prefix}} 
+			{{/if}}
+			{{value}}
+		{{else}}
+			<span style="color:gray;"><i>&lt;retracted&gt;</i></span>
+		{{/if}}
+	{{/if}}
+</template>
+
 <template name="Profile_JS">
 	<!-- Progress of the candidate -->
 	{{> Profile_JS_Progress}}
@@ -21,8 +39,21 @@
 				<div class="profile-header">
 					<!-- PERSONAL -->
 					<div class="personal-details">
-						<h1>{{profile.personal_details.name}} {{profile.personal_details.surname}}</h1>
+						{{#if viewingWithToken}}
+							<div class="viewing-with-token-wrapper">
+								You are viewing this profile with a token.
+							</div>
+						{{/if}}
+						<h1>{{profile.personal_details.name}} {{> Profile_retracted value=profile.personal_details.surname}}</h1>
 						<h3><i class="glyphicon glyphicon-map-marker"></i> {{profile.personal_details.suburb}}, {{profile.personal_details.province}}</h3>
+						<!-- IT Skills -->
+						<div>
+						{{#each profile.role_requirements.skills}}
+							<span class="skill-item-wrapper">
+								<span class="skill-item"><strong>{{skill}}</strong> - <i>{{years_experience}} yrs.</i></span>
+							</span>
+						{{/each}}
+						</div>
 					</div>
 					<!-- VIEWSHIP GRAPH -->
 					<div class="viewship-graph">
@@ -31,25 +62,94 @@
 				</div>
 				<div class="profile-body content">
 					{{#if profile.progress}}
-						<div style="display:inline-block;width:70%;vertical-align:top;" class="content admin-specific">
-							<h3 class="content-header">Administration Details</h3>
+						<div style="display:inline-block;width:70%;vertical-align:top;" class="content admin-specific inline">
+							<h3 class="content-header">Administration</h3>
+							{{#if isInRole 'admin'}}
+								<div class="content" style="width:100% !important;">
+									<h5 class="content-header">Controls</h5>
+									<div class="content">
+										<form class="token-generation-wrapper"><!--
+											-->{{#if generatingToken}}<button disabled class="default">Generating...</button>{{else}}<button type="submit" action="submit" class="default">Generate Token!</button>{{/if}}<!--
+											--><input name="token" placeholder="Click to generate token" /><!--
+										--></form>
+										<i style="color:gray;font-size:12px;margin-top:8px;line-height:12px;">
+											<strong>What is this?</strong> &ndash; Profile tokens are used to grant access to all details of this profile. It is a once off 'token' and is generated on request from employers. This will allow them to view and download the job seekers' CV and view their contact details.
+										</i>
+										<!-- List of exisiting tokens -->
+										<div class="exisiting-tokens-wrapper">
+											<strong>Exisiting tokens:</strong>
+											<div class="indent">
+												{{#if profile.request_tokens}}
+													<ul>
+														{{#each profile.request_tokens}}
+															<li>{{> exisitingTokenItem}}</li>
+														{{/each}}
+													</ul>
+												{{else}}
+													<i>No exisiting tokens.</i>
+												{{/if}}
+											</div>
+										</div>
+									</div>
+								</div>
+							{{/if}}
 							<div class="content">
 								<h5 class="content-header">Comment/s</h5>
-								<div class="content">{{profile.progress.comment}}</div>
+								<div class="content">
+									{{#if profile.progress.comment}}
+										{{profile.progress.comment}}
+									{{else}}
+										<i>No comment/s.</i>
+									{{/if}}
+								</div>
+							</div>
+							<div class="content">
+								<h5 class="content-header">Profile Requests</h5>
+								<div class="content">
+									<strong>Total requests </strong> &ndash; 
+									{{#if profile.requests}}
+										{{profile.requests}}
+									{{else}}
+										0
+									{{/if}}
+									<div style="font-size:12px;line-height:12px;margin-top:10px;">
+										Profile requests are generated when an employer shows interest in the Job Seeker and requests the complete details of their account.
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="screening-admin">
-							<h5><i class="glyphicon glyphicon-user"></i> Screening Admin:</h5>
-							<div>{{screeningAdmin.personal_details.name}} {{screeningAdmin.personal_details.surname}}</div>
+						<div class="admin-and-employer-controls">
+							{{#if isInRole 'employer'}}
+								<div class="screening-admin">
+									<h5>Employer Controls:</h5>
+									{{#if processingRequest}}
+										<button class="special">Processing Request...</button>
+									{{else}}
+										{{#if requestResponse}}
+											<span style="color:gray;font-size:12px;line-height:14px;">{{requestResponse}}</span>
+										{{else}}
+											<button class="special js-request-ref">Request profile details for <strong>{{profile.personal_details.name}}</strong></button>
+										{{/if}}
+										{{#if previousRequestExists}}
+											<!-- last request made -->
+											<div style="margin-top:8px;font-size:11px;line-height:11px;">Previously requested on <strong>{{dateRequested}}</strong></div>
+										{{/if}}
+									{{/if}}
+								</div>
+							{{/if}}
+							<div class="screening-admin">
+								<h5><i class="glyphicon glyphicon-user"></i> Screening Admin:</h5>
+								<div>{{screeningAdmin.personal_details.name}} {{screeningAdmin.personal_details.surname}}</div>
+							</div>
 						</div>
 					{{/if}}
 					<!-- CONTACT -->
 					<div class="content login-specific">
 						<h3 class="content-header">Contact Details</h3>
 						<div class="content">
-							<div><span class="detail-title">Telephone Number:</span> +27 {{profile.personal_details.tel_number}}</div>
-							<div><span class="detail-title">Cell Number:</span> +27 {{profile.personal_details.cell_number}}</div>
-							<div><span class="detail-title">Email Address:</span> {{primaryEmail}}</div>
+							<div><span class="detail-title">Telephone Number:</span> {{> Profile_retracted value=profile.personal_details.tel_number prefix='+27'}}</div>
+							<div><span class="detail-title">Cell Number:</span> {{> Profile_retracted value=profile.personal_details.cell_number prefix='+27'}}</div>
+							<div><span class="detail-title">Email Address:</span> {{> Profile_retracted value=primaryEmail}}</div>
 						</div>
 					</div>
 					<div class="content login-specific inline">
@@ -67,7 +167,7 @@
 										</div>
 									{{/each}}
 								{{else}}
-									<i>No <strong>CV</strong> to display.</i>
+									{{> Profile_retracted}}
 								{{/if}}
 							</div>
 						</div>
@@ -94,6 +194,10 @@
 		</div>
 	</div>
 </template>
+	
+	<template name="exisitingTokenItem">
+		{{token}} &ndash; {{fdate date 'dd/mm/yyyy'}} <span style="font-size:11px;">(<a href="" class="js-delete-token">delete</a>)</span>
+	</template>
 
 	<template name="Profile_JS_Views">
 		 <div id="container-area" style="height:100%; width:100%;"></div>

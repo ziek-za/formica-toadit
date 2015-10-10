@@ -101,8 +101,13 @@ Template.Profile.helpers({
 	});
  	Template.Profile_Emp.events({});
 	// Profile > Profile_JS
+	Template.Profile_JS.created = function() { Session.set('processing-request', false); Session.set('request-reponse', false); }
 	Template.Profile_JS.helpers({
 		primaryEmail: function() { return this.emails[0].address; },
+		processingRequest: function() { return Session.get('processing-request'); },
+		generatingToken: function() { return Session.get('generating-token'); },
+		requestResponse: function() { return Session.get('request-reponse'); },
+		viewingWithToken: function() { return Session.get('viewing-token'); },
 		// Used to show or hide the profile notification to update details
 		profileNotification: function() {
 			var userId = Meteor.userId(); var targetUserId = this._id;
@@ -129,9 +134,71 @@ Template.Profile.helpers({
 				if (!err) { Session.set('screening-admin', admin); }
 			});
 			return Session.get('screening-admin');
+		},
+		// Used to check if the employer has requested this user before
+		previousRequestExists: function() { 
+			var currentUserId = Meteor.userId();
+			var userId = this._id;
+			if (Roles.userIsInRole(currentUserId, 'employer')) {
+				var user = Meteor.user();
+				if (user.profile.requests) {
+					for (i = 0; i < user.profile.requests.length; i++) {
+						if (user.profile.requests[i]._id == userId) {
+							Session.set('previously-requested-date', user.profile.requests[i].date);
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+		// Used to show when this user was requested by the employer viewing the profile
+		dateRequested: function() {
+			var date = Session.get('previously-requested-date');
+			if (date) {
+				return date.format("dd/mm/yyyy");
+			}
+			return false;
 		}
 	});
- 	Template.Profile_JS.events({});
+ 	Template.Profile_JS.events({
+ 		// Used to request a reference for a specific job seeker
+ 		"click .js-request-ref": function(e, t) {
+ 			var jobseekerId = this._id;
+ 			// Set processing to true
+ 			Session.set('processing-request', true);
+ 			Meteor.call("EMAIL_RequestProfileViewing", jobseekerId, function(err) {
+ 				if (err) { Notify("Error sending request: " + err.message, "fail"); }
+ 				else { Notify("Successfully sent request!", "success"); Session.set('request-reponse', 'Successfully sent request, you shall be contacted shortly with an email.'); }
+ 				Session.set('processing-request',false);
+ 			});
+ 		},
+ 		// Used to generate a token for job seeker profile access
+ 		"submit form": function(e, t) {
+ 			e.preventDefault();
+ 			var jobSeekerId = this._id;
+ 			Session.set('generating-token', true);
+ 			Meteor.call("UTIL_GenerateJobSeekerToken", jobSeekerId, function(err, url) {
+ 				if (err) { Notify("There was an error with generating a profile viewing token: " + err.message, "fail"); }
+ 				else if (url) {
+ 					e.target.token.value = url;
+ 				}
+ 				Session.set('generating-token', false);
+ 			});
+
+ 			return false;
+ 		}
+ 	});
+		// Profile > Profile_JS > exisitingTokenItem
+		Template.exisitingTokenItem.events({
+			"click .js-delete-token": function() {
+				var token = this.token; var jobSeekerId = Template.parentData()._id;
+				Meteor.call("UTIL_RemoveJobSeekerToken", jobSeekerId, token, function(err) {
+					if (err) { Notify("Error removing token (" + token + "): " + err.message); }
+				});
+			}
+		});
+	
  	// Profile > Profile_Emp > Profile_Emp_Edit
  	Template.Profile_Emp_Edit.created = function() {
  		Session.set('change-image-input', false);
@@ -139,7 +206,8 @@ Template.Profile.helpers({
  	Template.Profile_Emp_Edit.helpers({
  		// arrays used for input fields
  		provinces: function() { return PROVINCES(); },
- 		pageContainsError: function() { return Session.get('cbainput-error'); }
+ 		pageContainsError: function() { return Session.get('cbainput-error'); },
+ 		accountStates: function() { return CONST_EMPLOYER_STATES; }
  	});
  	Template.Profile_Emp_Edit.events({
  		// Global cancel
@@ -147,6 +215,23 @@ Template.Profile.helpers({
 			Router.go('Profile', {'_id':this._id});
 			Notify("Changes to <strong>" + this.profile.company_details.name + "</strong> were cancelled.", "warning");
 		},
+ 		// Used to save out changes to 'admin specific' progress
+ 		"click .js-save-admin": function(e, t) {
+ 			// Verify input
+ 			if (!Input_check_errors('bvv')) { return; }
+ 			var admin_edit_details = {
+ 				'status': Session.get('account-state')
+ 			};
+ 			var targetUserId = this._id;
+ 			// Update admin specific details
+ 			Meteor.call("UTIL_EditAdminSpecificDetailsEMP", targetUserId, admin_edit_details, function(err) {
+ 				if (err) {
+ 					Notify("Error with saving Employer admin specific details: " + err.error, "fail");
+ 				} else {
+					Notify("Successfully saved Employer admin specific details!", "success");
+ 				}
+ 			});
+ 		},
  		// Used to save out profile information/details
  		"click .js-save": function(e, t) {
  			// verify input

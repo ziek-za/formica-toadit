@@ -184,6 +184,7 @@ Template.input.events({
 	    	var obj = Template.parentData(1);
 	    	var session = obj.session;
 	    	var skills_arr = Session.get(session);
+	    	if (!skills_arr) { skills_arr = []; }
 	    	skills_arr.push({
 	    		"skill":this.toString(),
 	    		"years_experience": null
@@ -220,7 +221,6 @@ Template.input.events({
 				for (i = 0; i < val_arr.length; i++) {
 					if (val_arr[i].skill == this.skill) {
 						val_arr[i].years_experience = parseFloat(t.find(".js-skill-yrs").value);
-						console.log(val_arr[i]);
 					}
 				}
 				//check for errors
@@ -379,12 +379,14 @@ var set_visibilty = function(sessionPrefix, bool) {
 };
 var remove_duplicates = function(sessionPrefix, value_array, data) {
 	var out_array = [];
-	for (i = 0; i < data.length; i++) {
-		var contains = false;
-		for (k = 0; k < value_array.length; k++) {
-			if (data[i] == value_array[k].skill) { contains = true; }
+	if (value_array) {
+		for (i = 0; i < data.length; i++) {
+			var contains = false;
+			for (k = 0; k < value_array.length; k++) {
+				if (data[i] == value_array[k].skill) { contains = true; }
+			}
+			if (!contains) { out_array.push(data[i]); }
 		}
-		if (!contains) { out_array.push(data[i]); }
-	}
+	} else { out_array = data; }
 	Session.set(sessionPrefix+'-data', out_array);
 };

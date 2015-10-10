@@ -19,9 +19,7 @@
             </a>
             <!-- Check if the user is logged in -->
             {{#if currentUser}}
-              {{#if isInRole 'admin'}}
                 <a href="{{pathFor route='Search' query='type=job-seeker'}}"><li>Job Seekers</li></a>
-              {{/if}}
             {{else}}
               <a href="{{pathFor route='Login' _portal='job-seeker'}}">Job Seekers</a>
             {{/if}}

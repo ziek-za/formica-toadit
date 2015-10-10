@@ -33,17 +33,26 @@ Meteor.methods({
 		});
 	},
 	EMAIL_AdminAccountCreationVerification: function(userId, email, password) {
+		//userId == newly created admin ID
 		console.log("Sending admin verification email to (" + email + ")");
 		// Get user object
 		var user = Meteor.users.findOne({'_id':userId});
 		if (_.isUndefined(user)) { return; }
+		var currentHost = Meteor.absoluteUrl();
 		// Get HTML template
-		SSR.compileTemplate('Email_AdminAccountVerification', Assets.getText('account-verification.html'));
+		SSR.compileTemplate('Email_AdminAccountVerification', Assets.getText('account-verification-admin.html'));
 		var html = SSR.render('Email_AdminAccountVerification', {
-			user: user
+			email: email,
+			password: password,
+			link: currentHost + 'login/admin'
 		});
 		// Send email
-		// TODO
+		Email.send({
+			from: "no-reply@toadit.com",
+			to: email,
+			subject: "ToadIT - Admin Login Details",
+			html: html
+		})
 	},
 	EMAIL_PasswordResetToken: function(email) {
 		console.log("Sending reset password to (" + email +")");
@@ -89,6 +98,60 @@ Meteor.methods({
 			to: "contacts@toadit.com",
 			subject: "ToadIT - Contact Us Form Submission",
 			html: html
+		});
+	},
+	// Used to request profile details
+	// employer -> admin
+	EMAIL_RequestProfileViewing: function(jobseekerId) {
+		var employerId = Meteor.userId();
+		if (!Roles.userIsInRole(employerId, 'employer')) { throw new Meteor.Error("You are not an employer"); }
+		var employer = Meteor.users.findOne({'_id':employerId});
+		var jobseeker = Meteor.users.findOne({'_id':jobseekerId});
+		// get employers email
+		console.log("Sending 'employer request' email from (" + employer.emails[0].address + ")");
+		var currentHost = Meteor.absoluteUrl();
+		// Get HTML template
+		SSR.compileTemplate('Email_RequestJobSeeker', Assets.getText('request-jobseeker.html'));
+		var html = SSR.render('Email_RequestJobSeeker', {
+			employerProfileLink:currentHost + 'profile/' + employerId,
+			jobseekerProfileLink:currentHost + 'profile/' + jobseekerId,
+			jobSeekerDetails: jobseeker,
+			employerDetails:employer,
+			employerEmail:employer.emails[0].address,
+			date: new Date()
+		});
+		// Send email
+		Email.send({
+			from: "no-reply@toadit.com",
+			to: "info@toadit.com",
+			subject: "ToadIT - [" + employer.profile.company_details.name + "] request for [" + jobseeker.profile.personal_details.name + " " + jobseeker.profile.personal_details.surname + "]",
+			html: html
+		}, function(err) {
+			if (!err) {
+				// Log request to employers account
+				Meteor.users.update({'_id':employerId, 'profile.requests._id':jobseekerId}, {$set: {
+						'profile.requests.$': {
+							'_id': jobseekerId,
+							'date': new Date()
+						}
+					}
+				},
+				function(err, length) {
+					if (length == 0) {
+						// there hasnt been a request for this user before
+						Meteor.users.update({'_id':employerId}, {$push: {
+							'profile.requests': {
+								'_id': jobseekerId,
+								'date': new Date()
+							}
+						}});
+					}
+				});
+				// Log request to job seekers account
+				Meteor.users.update({'_id':jobseekerId}, {$inc: {
+					'profile.requests':1
+				}});
+			}
 		});
 	},
 	// Used to notify administration of users whom contracts are expiring

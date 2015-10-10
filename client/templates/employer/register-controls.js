@@ -22,7 +22,8 @@ Template.Register_Emp.events({
 			'picture': {
 				'regular': '/style/images/default_employer_profile.jpg',
 				'thumbnail': '/style/images/default_employer_profile.jpg'
-			}
+			},
+			'status': 'pending verification'
 		};
 		// ACCOUNT DETAILS
 		var email = Session.get('reg-email');

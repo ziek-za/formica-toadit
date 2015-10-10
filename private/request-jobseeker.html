@@ -1,0 +1,20 @@
+<h1 style="text-align:center;font-family:'Arial';color:#ff7e00;border-bottom:1px solid lightgray;padding-bottom:8px;">
+	Profile Access Request
+</h1>
+<div style="padding:20px;text-align:center;width:40%;background-color:rgba(128, 128, 128, 0.3);margin:0 auto;">
+	<h3 style="font-family:'Arial';color:gray;">
+		<strong>{{employerDetails.profile.contact_person_details.name}} {{employerDetails.profile.contact_person_details.surname}}</strong> (+27 {{employerDetails.profile.contact_person_details.contact}}) from <strong>{{employerDetails.profile.company_details.name}}</strong> <br/> requested access to <br/> <strong>{{jobSeekerDetails.profile.personal_details.name}} {{jobSeekerDetails.profile.personal_details.surname}}&#39;s</strong> profile.
+	</h3>
+	<div style="padding:20px;">
+		Link to Employers ToadIT Profile: <a href="{{employerProfileLink}}" target="_blank">Here</a><br />
+		Link to requested Job Seekers ToadIT Profile: <a href="{{jobseekerProfileLink}}" target="_blank">Here</a><br/>
+		<i style="font-size:12px;margin-top:8px;">Request Date: {{date}}</i>
+	</div>
+	<div style="color:gray;font-size:13px;">
+		To grant access to <strong>{{jobSeekerDetails.profile.personal_details.name}} {{jobSeekerDetails.profile.personal_details.surname}}&#39;s</strong> profile, follow the link to their profile and generate a <i>viewing token</i>.<br/><br/>
+		This viewing token has a once-off use.
+	</div>
+</div>
+<div style="padding:15px;font-size:16px;text-align:center;">
+	<a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/contact-us">Contact Us</a>  &bull;  <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/about-us">About Us</a>  &bull; <a style="font-size:14px;color:gray;text-decoration:none;" href="http://www.toadit.com/">Home</a>
+</div>

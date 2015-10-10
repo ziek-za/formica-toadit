@@ -17,6 +17,10 @@ Template.registerHelper('equalsor4', function (a, b, c, d, e) {
 Template.registerHelper('isSelf', function (_id) {
 	return Meteor.userId() === _id;
 });
+Template.registerHelper('fdate', function(date, string) {
+	return date.format(string);
+});
+
 Template.userControls.events({
 	"click .js-logout": function(e, t) {
 		Meteor.logout(function(err) {
