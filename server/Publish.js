@@ -30,7 +30,6 @@ Meteor.publish('profile', function(userId, currentUserId, token) {
 			}
 		}
 		return Meteor.users.find({'_id':userId}, {fields: {
-			'profile.personal_details.surname': 0,
 			'profile.personal_details.cell_number': 0,
 			'profile.personal_details.tel_number': 0,
 			'profile.cv': 0,
@@ -56,3 +55,6 @@ Meteor.publish('queries', function(selector, options) { return Queries.find(sele
 
 // Vacancies
 Meteor.publish('vacancies', function(selector, options) { return Vacancies.find(selector, options); });
+
+// Selections
+Meteor.publish('selections', function(selector, options) { return Selections.find(selector, options); })

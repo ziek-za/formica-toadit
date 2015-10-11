@@ -186,5 +186,18 @@ Meteor.methods({
 				'profile.request_tokens': { 'token': token }
 			}
 		});
+	},
+	// Used for creating a new job seeker selection
+	UTIL_CreateSelection: function(selection) {
+		var userId = Meteor.userId();
+		// Auth
+		Meteor.call("AUTH_IsAdmin", userId);
+		var id = Selections.insert({
+			date: new Date(),
+			selection: selection,
+			created_by: userId
+		});
+		// Return id for redirect on save
+		return id;
 	}
 });

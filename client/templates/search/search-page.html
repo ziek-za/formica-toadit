@@ -1,6 +1,25 @@
 <template name="Search">
 	<div class="search-wrapper">
-		<h1 class="header-1"><i class="glyphicon glyphicon-search"></i> Search for <strong>{{searchType}}'s</strong></h1>
+		<h1 class="header-1">
+			<i class="glyphicon glyphicon-search"></i> Search for <strong>{{searchType}}'s</strong>
+			{{#if isInRole 'admin'}}
+				{{#if searchingForJobSeeker}}
+					<span class="header-link pull-right">
+						<a href="{{pathFor route='Selections'}}">List Selections</a>
+						{{#if creatingSelection}}
+							{{#if savingSelection}}
+								<button disabled class="success">Saving...</button>
+							{{else}}
+								<button class="success js-save-selection">Save</button>
+							{{/if}}
+							<button class="default js-cancel-selection">Cancel</button>
+						{{else}}
+							<button class="special js-create-selection"><i class="glyphicon glyphicon-plus"></i> Create Selection</button>
+						{{/if}}
+					</span>
+				{{/if}}
+			{{/if}}
+		</h1>
 		<!-- SEARCH FIELDS-->
 		<div class="searchfields-wrapper">
 			{{#if searchingForJobSeeker}}
@@ -17,14 +36,13 @@
 						<thead>
 							{{#if searchingForJobSeeker}}
 								<tr class="job-seeker">
-									<th></th>
+									<th></th> <!-- profile picture -->
 									<th>Name</th>
-									<th>Current</th>
-									<th>Ideal</th>
-									<th>Move-for</th>
+									<th><i>Move-for</i> Salary</th>
 									<th>Province</th>
 									<th>SAP Module</th>
 									<th>Industry</th>
+									<th>IT Skills</th>
 								</tr>	
 							{{else}}
 								<tr class="employer">
@@ -73,6 +91,7 @@
 
 	<template name="SearchDisplay_JS">
 		<tr class="search-result-row job-seeker">
+			<!-- Profile picture -->
 			<td>
 				<div class="profile-picture-thumbnail" style="background-image:url('{{profile.picture.regular}}');"></div>
 			</td>
@@ -91,18 +110,31 @@
 					{{profile.personal_details.name}} {{profile.personal_details.surname}}
 				</a>
 			</td>
-			<!-- Current Salary -->
-			<td>R {{profile.salary_details.current}}</td>
-			<!-- MoveFore Salary -->
+			<!-- MoveFor Salary -->
 			<td>R {{profile.salary_details.moveFor}}</td>
-			<!-- Ideal Salary -->
-			<td>R {{profile.salary_details.ideal}}</td>
 			<!-- Province -->
 			<td>{{profile.personal_details.province}}</td>
 			<!-- SAP Module -->
 			<td>{{profile.role_requirements.sap_module}}</td>
 			<!-- Industry -->
 			<td>{{profile.role_requirements.industry}}</td>
+			<!-- Skills -->
+			<td>
+				{{#each profile.role_requirements.skills}}
+					<span class="skill-item-wrapper">
+						<span class="skill-item"><strong>{{skill}}</strong> - <i>{{years_experience}} yrs.</i></span>
+					</span>
+				{{/each}}
+			</td>
+			{{#if creatingSelection}}
+				<div class="selection-control-wrapper">
+					{{#if existsInSelection}}
+						<button class="danger js-remove"><i class="glyphicon glyphicon-minus"></i></button>
+					{{else}}
+						<button class="success js-add"><i class="glyphicon glyphicon-plus"></i></button>
+					{{/if}}
+				</div>
+			{{/if}}
 		</tr>
 	</template>
 
@@ -137,7 +169,22 @@
 							Placed
 							{{> input seed='gbg' type='checkbox' value=false session='set-placed'}}
 						</div>
+						<div>
+							
+							Details Complete
+							{{> input seed='gbg' type='checkbox' value=false session='set-details-complete'}}
+						</div>
+						<div>
+							
+							Details Pending
+							{{> input seed='gbg' type='checkbox' value=false session='set-details-pending'}}
+						</div>
 					{{/if}}
+				</div>
+				<!-- Skills -->
+				<div class="skill-search">
+					<div><strong>Skills</strong></div>
+					{{> input seed='gbg' session='search-it-skills' value='' type='input-dropdown' data=ITSkills}}
 				</div>
 				<!-- Province -->
 				<div class="combobox-search">
@@ -185,6 +232,12 @@
 	<template name="SearchFields_Emp">
 		<form>
 			<div>
+				<div class="search-types">
+					<div>
+						<i class="glyphicon glyphicon-ok-sign" style="color:green;"></i>
+						Verified
+					</div>
+				</div>
 				{{> input seed='bob' type='text' placeholder='Employer Name Query' value='' session='search-query'}}
 				<!-- Province -->
 				<div class="combobox-search">

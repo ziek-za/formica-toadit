@@ -15,7 +15,7 @@
                     <br /><br />
                       <p class="ask">
                         Are you looking for the best IT talents in South Africa? <br /><br />
-                        <a href="{{pathFor route='WhyUs_Emp'}}">Learn more &gt;&gt;</a>
+                        <!--<a href="{{pathFor route='WhyUs_Emp'}}">Learn more &gt;&gt;</a>-->
                       </p>
                   </li>
                   <li class="item">
@@ -27,7 +27,7 @@
                     <br /><br />
                       <p class="ask">
                         Are you looking for a new challenge in IT?<br /><br />
-                        <a href="{{pathFor route='WhyUs_JS'}}">Learn more &gt;&gt;</a>
+                        <!--<a href="{{pathFor route='WhyUs_JS'}}">Learn more &gt;&gt;</a>-->
                       </p>
                   </li>
                 </ul><br />
@@ -44,8 +44,7 @@
     {{#if vacancies}}
       {{#each vacancies}}
         {{> homepageVacancyItem}}
-      {{/each}}    
-      <br />
+      {{/each}}   
       <a class="view-more" href="{{pathFor route='Vacancies_List'}}">View More ></a>
     {{else}}
       <div style="width:100%; text-align:center; color:gray; font-size:13px"><i>No vacancies to show.</i></div>

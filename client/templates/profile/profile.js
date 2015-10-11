@@ -202,12 +202,14 @@ Template.Profile.helpers({
  	// Profile > Profile_Emp > Profile_Emp_Edit
  	Template.Profile_Emp_Edit.created = function() {
  		Session.set('change-image-input', false);
+ 		Session.set('saving', false);
  	};
  	Template.Profile_Emp_Edit.helpers({
  		// arrays used for input fields
  		provinces: function() { return PROVINCES(); },
  		pageContainsError: function() { return Session.get('cbainput-error'); },
- 		accountStates: function() { return CONST_EMPLOYER_STATES; }
+ 		accountStates: function() { return CONST_EMPLOYER_STATES; },
+ 		saving: function() { return Session.get('saving'); }
  	});
  	Template.Profile_Emp_Edit.events({
  		// Global cancel
@@ -260,7 +262,21 @@ Template.Profile.helpers({
  				'surname': Session.get('rep-surname'),
  				'contact': Session.get('rep-contact')
  			};
-
+ 			//Uploading of an image
+ 			if (Session.get('change-image-input')) {
+ 				// Image has been set to upload
+ 				var img = new FS.File(t.find('.js-image-input').files[0]);
+ 				img.metadata = {
+ 					'uploadUserId': userId,
+ 					'targetUserId': targetUserId
+ 				}
+ 				Images.insert(img, function(err, obj) {
+ 					if (!err) {
+ 						Meteor.call("UTIL_AddImageUpload", userId, targetUserId, obj._id, obj.data.blob.name);
+ 					}
+ 				});
+ 			}
+ 			Session.set('saving', true);
  			Meteor.call("UTIL_EditEmployerProfile", userId, targetUserId, employer, function(err) {
  				if (!err) {
  					Router.go("Profile", {'_id': targetUserId});
@@ -268,31 +284,17 @@ Template.Profile.helpers({
  				} else {
  					Notify("Unable to save changes: " + err.error, "fail");
  				}
+ 				Session.set('saving', false);
  			});
  		},
  		// Used to signal that the profile picture has been changed
  		"change .js-image-input": function() {
  			Session.set('change-image-input', true);
  		},
- 		// Used to signal that the CV has been changed
- 		"change .js-cv-input": function(e, t) {
- 			Session.set('change-cv-input', true);
- 			var file = t.find('.js-cv-input').files[0];
- 			if (!_.isUndefined(t.find('.js-cv-input').files[0]) &&
- 				file.type == "application/pdf") {
- 				Session.set('cv-error', false);
- 				Session.set('abcinput-error', false);
- 			} else {
- 				Session.set('cv-error', "Invalid file format for CV upload");
- 			}
- 		},
- 		// Used to remove CV
- 		"click .js-remove-cv": function(e, t) {
- 			var cv_id = this._id;
- 			var toBeRemoved = Session.get('remove-cv');
- 			if (toBeRemoved) { toBeRemoved = false; Session.set('cv-error', false); Session.set('abcinput-error', false); }
- 			else { toBeRemoved = {'_id':cv_id}; Session.set('cv-error', "If you are trying to replace your CV, you are <strong>required to upload a new one as well</strong>."); }
- 			Session.set('remove-cv', toBeRemoved);
+ 		// Used to remove a profile picture and reset it to default
+ 		"click .js-remove-image": function(e,t) {
+ 			var img_id = this.profile.picture._id;
+			Images.remove(img_id);
  		}
  	});
  	// Profile > Profile_JS > Profile_JS_Edit

@@ -1,57 +1,130 @@
 SearchSelector = function(search, type) {
-	//console.log(search);
-	var regexQuery = sanitizeQueryForRegex(search.query);
-	var regexProvince = sanitizeQueryForProvinceRegex(search.province);
 	var selector = {};
 	// Based on the type, use a unique specifier
 	if (type == "job-seeker") {
-		var regexDesiredPos = sanitizeQueryForRegex(search.position.desired);
-		var industryRegex = sanitizeQueryForProvinceRegex(search.industry);
-		var sapModuleRegex = sanitizeQueryForProvinceRegex(search.sap_module);
-		console.log(sapModuleRegex + " " + industryRegex);
+		selector.$and = [];
+		// ROLE
+		selector.$and.push({ 'roles': {$in: ["job-seeker"]}});
+		// STATE
 		var typeArray = [];
 		if (search.type.active) { typeArray.push('active'); }
 		if (search.type.pending) { typeArray.push('pending'); }
 		if (search.type.placed) { typeArray.push('placed'); }
-	    selector = {$and: [
-	    	// Ensure that their profile is 'active' and thus is listed
-	    	{ 'profile.status': {$in: typeArray}},
-    		// Personal details (name & surname)
-	      	{$or: [
-	      		{'profile.personal_details.name': {$regex: regexQuery, $options: "ig"}},
-	      		{'profile.personal_details.surname': {$regex: regexQuery, $options: "ig"}}
-	      	]},
-	      	// Role requirements
-	      	{ 'profile.role_requirements.industry': {$regex: industryRegex, $options: "ig"}},
-	      	{ 'profile.role_requirements.sap_module': {$regex: sapModuleRegex, $options: "ig"}},
-	      	// Province
-	      	{ 'profile.personal_details.province': {$regex: regexProvince, $options: "ig"}},
-	      	// Position
-	      	{ 'profile.role_requirements.desired_job': {$regex: regexDesiredPos, $options: "ig"}},
-	      	// Salary
-	      	{$and: [
-	      		// Current salary
-	      		{'profile.salary_details.current': {$gte: search.current_salary.from}},
-	      		{'profile.salary_details.current': {$lte: search.current_salary.to}},
-	      		// MoveFor salary
-	      		{'profile.salary_details.moveFor': {$gte: search.moveFor_salary.from}},
-	      		{'profile.salary_details.moveFor': {$lte: search.moveFor_salary.to}},
-	      		// Ideal salary
-	      		{'profile.salary_details.ideal': {$gte: search.ideal_salary.from}},
-	      		{'profile.salary_details.ideal': {$lte: search.ideal_salary.to}}
-	      	]},
-	      	// Job seeker
-	      	{ 'roles': {$in: ["job-seeker"]}}
-	    ]};
+		if (search.type.details_complete) { typeArray.push('details complete'); }
+		if (search.type.details_pending) { typeArray.push('details pending'); }
+		selector.$and.push(
+			{'profile.status': {$in: typeArray}}
+		);
+		// QUERY
+		if (search.query) {
+			var regexQuery = sanitizeQueryForRegex(search.query);
+			selector.$and.push(
+				{$or: [
+		      		{'profile.personal_details.name': {$regex: regexQuery, $options: "ig"}},
+		      		{'profile.personal_details.surname': {$regex: regexQuery, $options: "ig"}}
+		      	]}
+			);
+		}
+		// PROVINCE
+		if (search.province) {
+			selector.$and.push(
+				{ 'profile.personal_details.province': {$regex: search.province, $options: "ig"}}
+			);
+		}
+		// ROLE REQUIREMENTS
+		if (search.sap_module) {
+			selector.$and.push(
+				{ 'profile.role_requirements.sap_module': {$regex: search.sap_module, $options: "ig"}}
+			);
+		}
+		if (search.industry) {
+			selector.$and.push(
+				{ 'profile.role_requirements.industry': {$regex: search.industry, $options: "ig"}}
+			);
+		}
+		if (search.position.desired) {
+			selector.$and.push(
+				{ 'profile.role_requirements.desired_job': {$regex: search.position.desired , $options: "ig"}}
+			);
+		}
+		// SALARY
+		// current_salary
+		if (search.current_salary.from &&
+			!_.isNaN(search.current_salary.from)) {
+			selector.$and.push(
+				{'profile.salary_details.current': {$gte: search.current_salary.from}}
+			);
+		}
+		if (search.current_salary.to &&
+			!_.isNaN(search.current_salary.to)) {
+			selector.$and.push(
+				{'profile.salary_details.current': {$gte: search.current_salary.to}}
+			);
+		}
+		// moveFor_salary
+		if (search.moveFor_salary.from &&
+			!_.isNaN(search.moveFor_salary.from)) {
+			selector.$and.push(
+				{'profile.salary_details.moveFor': {$gte: search.moveFor_salary.from}}
+			);
+		}
+		if (search.moveFor_salary.to &&
+			!_.isNaN(search.moveFor_salary.to)) {
+			selector.$and.push(
+				{'profile.salary_details.moveFor': {$gte: search.moveFor_salary.to}}
+			);
+		}
+		// ideal_salary
+		if (search.ideal_salary.from &&
+			!_.isNaN(search.ideal_salary.from)) {
+			selector.$and.push(
+				{'profile.salary_details.ideal': {$gte: search.ideal_salary.from}}
+			);
+		}
+		if (search.ideal_salary.to &&
+			!_.isNaN(search.ideal_salary.to)) {
+			selector.$and.push(
+				{'profile.salary_details.ideal': {$gte: search.ideal_salary.to}}
+			);
+		}
+		// SKILLS
+		if (search.skills) {
+			for (i = 0; i < search.skills.length; i++) {
+				selector.$and.push(
+					{'profile.role_requirements.skills.skill': search.skills[i].skill}
+				);
+				if (search.skills[i].years_experience &&
+					!_.isNaN(search.skills[i].years_experience)) {
+					selector.$and.push(
+						{'profile.role_requirements.skills.years_experience': {$gte: search.skills[i].years_experience}}
+					);
+				}
+			}
+		}
     } else if (type == "employer") {
-    	selector = {$and: [
-	      	{ 'profile.company_details.name': {$regex: regexQuery, $options: "ig"}},
-	      	// Province
-	      	{ 'profile.company_details.province': {$regex: regexProvince, $options: "ig"}},
-	      	{ 'roles': {$in: ["employer"]}}
-	    ]};
+    	selector.$and = [];
+		// ROLE
+		selector.$and.push({ 'roles': {$in: ["employer"]}});
+		// QUERY
+		if (search.query) {
+			selector.$and.push(
+				{ 'profile.company_details.name': {$regex: search.query, $options: "ig"}}
+			);
+		}
+		// PROVINCE
+		if (search.province) {
+			selector.$and.push(
+				{ 'profile.company_details.province': {$regex: search.province, $options: "ig"}}
+			);
+		}	
+		// VERIFIED COMPANIES
+		if (!Roles.userIsInRole(Meteor.userId(), 'admin')) {
+			selector.$and.push(
+				{'profile.status': 'verified'}
+			);
+		}		
     }
-    //console.log(selector);
+    console.log(selector);
     return selector;
 };
 

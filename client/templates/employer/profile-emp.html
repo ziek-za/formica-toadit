@@ -79,8 +79,10 @@
 					<div class="content">
 						<div class="profile-picture-wrapper">
 							<div class="profile-picture" style="background-image:url({{profile.picture.regular}});"></div>
-							<i>Not available currently.</i>
-							<!--<input type="file" class="js-image-input" />-->
+							<input type="file" class="js-image-input" />
+							{{#if profile.picture._id}}
+								<a href="" class="js-remove-image">Remove Profile Picture</a>
+							{{/if}}
 						</div>
 					</div>
 				</div>
@@ -112,7 +114,13 @@
 				</div>
 			</div>
 		</div>
-		{{#if pageContainsError}}{{else}}<button class="js-save">Save</button>{{/if}}
+		{{#if pageContainsError}}{{else}}
+			{{#if saving}}
+				<button disabled>Saving...</button>
+			{{else}}
+				<button class="js-save">Save</button>
+			{{/if}}
+		{{/if}}
 		<button class="js-cancel">Cancel</button>
 		{{#if pageContainsError}}<br /><small style="color:red;"><i><strong>Unable to save</strong> as the page contains errors, see above.</i></small>{{/if}}
 	</div>

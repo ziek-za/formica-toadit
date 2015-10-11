@@ -3,6 +3,8 @@ Template.Search.created = function() {
 	Session.set('page', 1);
 	Session.set('ready', false);
 	Session.set('total', false);
+	Session.set("creating-selection", false);
+	Session.set("selection", []);
 }
 Template.Search.helpers({
 	searchType: function() {
@@ -36,9 +38,39 @@ Template.Search.helpers({
 	},
 	page: function() { return Session.get('page'); },
 	ready: function() { return Session.get('ready'); },
-	total: function() { return Session.get('total'); }
+	total: function() { return Session.get('total'); },
+	// Used for creating selections of job seekers
+	creatingSelection: function() { return Session.get("creating-selection"); },
+	savingSelection: function() { return Session.get('saving-selection'); }
 });
 Template.Search.events({
+	// Used to create a selection of job seekers
+	"click .js-create-selection": function() { 
+		// Set the session to 'creating selection'
+		Session.set("creating-selection", true);
+	},
+	"click .js-cancel-selection": function() {
+		Session.set("creating-selection", false);
+		Session.set("selection", []);
+	},
+	"click .js-save-selection": function() { 
+		var selection = Session.get("selection");
+		if (!selection || selection.length == 0) {
+			Notify("Unabled to save with no users in selection!", "fail");
+			return;
+		}
+		Session.set('saving-selection', true);
+		Meteor.call("UTIL_CreateSelection", selection, function(err, id) {
+			if (err) { Notify("Error saving selection: " + err.message, "fail"); }
+			else {
+				Session.set("selection", []);
+				Notify("Successfully saved selection!", "success");
+				Router.go("Selections_View", {'_id':id});
+			}
+			Session.set('saving-selection', false);
+		});
+	},
+	// Used for navigating search results
 	"click .js-page-right": function(e, t) {
 		var page = Session.get('page') + 1;
 		Session.set('page', page);
@@ -51,10 +83,37 @@ Template.Search.events({
 });
 
 	// Search > SearchDisplay_JS
+	Template.SearchDisplay_JS.helpers({
+		creatingSelection: function() { return Session.get("creating-selection"); },
+		existsInSelection: function() { 
+			var selection = Session.get('selection');
+			var jobSeekerId = this._id;
+			if (_.contains(selection, jobSeekerId)) { return true; }
+			return false;
+		}
+	});
 	Template.SearchDisplay_JS.events({
 		// Used to navigate to job seeker profile
 		"click .js-view-profile": function(e, t) {
 			window.open(Router.url("Profile", {_id:this._id}));
+		},
+		// Used for adding job seekers to selection array
+		"click .js-add": function() { 
+			var selection = Session.get('selection');
+			var jobSeekerId = this._id;
+			if (!_.contains(selection, jobSeekerId)) { selection.push(jobSeekerId); }
+			Session.set('selection', selection);
+		},
+		// Used to remove job seekers from existing selection
+		"click .js-remove": function() { 
+			var selection = Session.get('selection');
+			var jobSeekerId = this._id;
+			if (selection) {
+				for (i = 0; i < selection.length; i++) {
+					if (selection[i] == jobSeekerId) { selection.splice(i, 1); }
+				}
+				Session.set('selection', selection);
+			}
 		}
 	});
 	Template.SearchDisplay_Emp.events({
@@ -70,7 +129,8 @@ Template.Search.events({
 		provinces: function() { return PROVINCES(); },
 		positions: function() { return JOBS(); },
 		sapModules: function() { return SAP_MODULES; },
-		industries: function() { return INDUSTRIES; }
+		industries: function() { return INDUSTRIES; },
+		ITSkills: function() { return IT_SKILLS; }
 	});
 	Template.SearchFields_JS.events({
 		"submit": function(e, t)  {
@@ -80,14 +140,14 @@ Template.Search.events({
 			search.query = Session.get('search-query');
 			// SALARY
 			// Current
-			search.current_salary.from = AssignFrom(parseInt(Session.get('current-high')));
-			search.current_salary.to = AssignTo(parseInt(Session.get('current-low')));
+			search.current_salary.from = parseInt(Session.get('current-high'));
+			search.current_salary.to = parseInt(Session.get('current-low'));
 			// MoveFor
-			search.moveFor_salary.from = AssignFrom(parseInt(Session.get('movefor-high')));
-			search.moveFor_salary.to = AssignTo(parseInt(Session.get('movefor-low')));
+			search.moveFor_salary.from = parseInt(Session.get('movefor-high'));
+			search.moveFor_salary.to = parseInt(Session.get('movefor-low'));
 			// Ideal
-			search.ideal_salary.from = AssignFrom(parseInt(Session.get('desired-high')));
-			search.ideal_salary.to = AssignTo(parseInt(Session.get('desired-low')));
+			search.ideal_salary.from = parseInt(Session.get('desired-high'));
+			search.ideal_salary.to = parseInt(Session.get('desired-low'));
 			// Province
 			search.province = Session.get('search-province');
 			// Roles requirements
@@ -95,17 +155,23 @@ Template.Search.events({
 			search.sap_module = Session.get('search-sap-module');
 			search.industry = Session.get('search-industry');
 			// Type
-			search.type.active = Session.get('set-active');
-			search.type.pending = Session.get('set-pending');
-			search.type.placed = Session.get('set-placed');
-			//console.log(search);
+			if (Roles.userIsInRole(Meteor.userId(), 'admin')) {
+				search.type.active = Session.get('set-active');
+				search.type.pending = Session.get('set-pending');
+				search.type.placed = Session.get('set-placed');
+				search.type.details_complete = Session.get('set-details-complete');
+				search.type.details_pending = Session.get('set-details-pending');
+			} else {
+				search.type.active = true;
+			}
+			// Skills
+			search.skills = Session.get('search-it-skills');
 			// Search
+			Session.set('page', 1);
 			Session.set('search', search);
 			Session.set('ready', false);
-			//window.setInterval(function() { Session.set('ready',true); }, 500);
 			// Log search query
 			Meteor.call("UTIL_LogQuery", search, 'job-seeker');
-			return false;
 		}
 	});
 	// EMPLOYER
@@ -123,6 +189,7 @@ Template.Search.events({
 			// Get province
 			search.province = Session.get('search-province');
 			// Search
+			Session.set('page', 1);
 			Session.set('search', search);
 			Session.set('ready', false);
 			//window.setInterval(function() { Session.set('ready',true); }, 500);

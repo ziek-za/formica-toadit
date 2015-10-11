@@ -1,12 +1,14 @@
 Template.Register_Emp.created = function() {
 	Session.set('processing', false);
 	Session.set('password-error', false);
+	Session.set('tnc-error', false);
 };
 Template.Register_Emp.helpers({
 	errors: function() { return Session.get('qweinput-error'); },
 	passwordError: function() { return Session.get("password-error"); },
 	provinces: function() { return PROVINCES(); },
-	processing: function() { return Session.get('processing'); }
+	processing: function() { return Session.get('processing'); },
+	tncError:function() { return Session.get('tnc-error'); }
 });
 Template.Register_Emp.events({
 	"submit": function(e, t) {
@@ -32,6 +34,9 @@ Template.Register_Emp.events({
 		// verify password input
 			if (password_1 != password_2) { Session.set('password-error', 'The provided passwords do not match.'); ie = true; }
 		// --------
+		// Check terms and conditions is ticked
+		if (!t.find(".js-tnc").checked) { Session.set('tnc-error', 'You must agree to the Terms and Conditions in order to register. Tick the checkbox in order to continue.'); ie = true; }
+		else { Session.set('tnc-error', false); }
 		if (ie) { return; }
 		// COMPANY DETAILS
 		employer.company_details.name = Session.get('reg-company-name');

@@ -2,6 +2,7 @@ Template.Register_JS.created = function() {
 	Session.set('cv-error', false);
 	Session.set('password-error', false);
 	Session.set('processing', false);
+	Session.set('tnc-error', false);
 };
 Template.Register_JS.helpers({
 	// used for combobox's
@@ -12,7 +13,8 @@ Template.Register_JS.helpers({
 	cvError: function() { return Session.get('cv-error'); },
 	passwordError: function() { return Session.get('password-error'); },
 	errors: function() { return Session.get('xfxinput-error'); },
-	processing: function() { return Session.get('processing'); }
+	processing: function() { return Session.get('processing'); },
+	tncError:function() { return Session.get('tnc-error'); }
 });
 Template.Register_JS.events({
 	"submit": function(e, t) {
@@ -44,7 +46,10 @@ Template.Register_JS.events({
 		// verify password input
 			if (password_1 != password_2) { Session.set('password-error', 'The provided passwords do not match.'); ie = true; }
 		// --------
-		//if (ie) { return; }
+		// Check terms and conditions is ticked
+		if (!t.find(".js-tnc").checked) { Session.set('tnc-error', 'You must agree to the Terms and Conditions in order to register. Tick the checkbox in order to continue.'); ie = true; }
+		else { Session.set('tnc-error', false); }
+		if (ie) { return; }
 		// PERSONAL DETAILS
 		job_seeker.personal_details.name = null;//Session.get('reg-name');
 		job_seeker.personal_details.surname = null;//Session.get('reg-surname');

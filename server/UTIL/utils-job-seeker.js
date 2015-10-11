@@ -67,7 +67,13 @@ Meteor.methods({
 	// Removes a profile picture from the user's profile and from
 	// the collection. Called from server.
 	UTIL_RemoveImage: function(userId, cvId) {
-		var default_image = "/style/images/default_jobseeker_profile.jpg";
+		var default_image = '';
+		// Check to see if it is the account of a job seeker or employer
+		if (Roles.userIsInRole(userId, 'employer')) {
+			default_image = "/style/images/default_employer_profile.jpg";
+		} else if (Roles.userIsInRole(userId, 'job-seeker')) {
+			default_image = "/style/images/default_jobseeker_profile.jpg";
+		}
 		// Remove CV from users profile
 		Meteor.users.update({'_id':userId}, {$set: {
 				'profile.picture': {
@@ -122,6 +128,8 @@ Meteor.methods({
 	},
 	// Increments page views for user profile
 	UTIL_IncrementViews: function(userId) {
+		// Check to see that it isn't the profile owner viewing their profile
+		if (Meteor.userId() == userId) { return; }
 		var td = new Date();
 		var tdUTC = new Date(Date.UTC(td.getFullYear(), td.getMonth() + 1, td.getDate(), 0,0,0));
 		var user = Meteor.users.findOne({'_id':userId});

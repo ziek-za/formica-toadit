@@ -1,0 +1,46 @@
+<template name="Selections">
+	<div class="search-wrapper">
+		<h1 class="header-1">Selections for <i>Job Seekers</i></h1>
+		<ul>
+			{{#each .}}
+				<li>(<a href="{{pathFor route='Selections_View' _id=this._id}}">View</a>) <strong>Selection count:</strong> {{selectionSize}} &mdash; <span style="color:gray;">Created at <i>{{fdate date 'HH:MM ddd dd/mm/yyyy'}}</i> by <i>{{created_by}}</i></span></li>
+			{{/each}}
+		</ul>
+	</div>
+</template>
+
+	<template name="Selections_View">
+		<div class="selection-wrapper">
+			<h1 class="header-1">Selection</h1>
+			<div class="selection-link-wrapper">
+				<span>Link to the following selection list</span><br />
+				<input type="text" value="{{urlFor route='Selections_View' _id=this._id}}" />
+			</div>
+			<div class="selection-item-wrapper">
+				{{#if selection}}
+					{{#each selection}}{{> selectionItem}}{{/each}}
+				{{else}}
+					<i>There are no selections.</i>
+				{{/if}}
+			</div>
+		</div>
+	</template>
+		<!-- Job seeker item inside of selecion list -->
+		<template name="selectionItem">
+			<div class="selection-item"><!--
+				--><div class="selection-pp" style="background-image: url('{{user.profile.picture.regular}}')"></div><!--
+				--><div class="selection-details">
+					<span class="name">{{user.profile.personal_details.name}}</span><br />
+					<span class="secondary-details">{{user.profile.personal_details.suburb}}, {{user.profile.personal_details.province}}</span>
+				</div><!--
+				--><div class="selection-skills">
+					<span class="selection-header">IT Skills</span><br />
+					{{#each user.profile.role_requirements.skills}}
+						<span class="skill-item-wrapper">
+							<span class="skill-item"><strong>{{skill}}</strong> - <i>{{years_experience}} yrs.</i></span>
+						</span>
+					{{/each}}
+				</div><!--
+				--><div class="selection-profile"><a href="{{pathFor route='Profile' _id=user._id}}" target="_blank">View Profile <i class="glyphicon glyphicon-chevron-right"></i></a></div><!--
+			--></div>
+		</template>

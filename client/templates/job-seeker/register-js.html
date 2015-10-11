@@ -64,13 +64,19 @@
 						{{/if}}
 					</div>
 				</div>-->
+				<div class="tnc-agreement-wrapper">
+					<input type="checkbox" value=false class="js-tnc">
+					<span>
+						&mdash; By ticking this checkbox you hereby agree to the <a href="{{pathFor route='TNC_JS'}}" target="_blank">Terms and Conditions</a> for registering with ToadIT.
+					</span>
+					{{#if tncError}}
+						<br />
+						<span style="color:red;">{{tncError}}</span>
+					{{/if}}
+				</div>
 				<div class="controls">
-					{{#if equalsor2 true errors processing}}
-						{{#if errors}}
-							<button class="special" action="submit" disabled type="submit">Register</button>
-						{{else}}
-							<button class="special" action="submit" disabled type="submit">{{> ajax_spinner_inline}} Registering</button>
-						{{/if}}
+					{{#if processing}}
+						<button class="special" action="submit" disabled type="submit">{{> ajax_spinner_inline}} Registering</button>
 					{{else}}
 						<button class="special" action="submit" type="submit">Register</button>
 					{{/if}}
